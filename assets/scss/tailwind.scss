@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  @import 'loco';
+
+  @font-face {
+    font-family: youngserifregular;
+    src: url('/fonts/young-serif/YoungSerif-Regular.eot');
+    src: url('/fonts/young-serif/YoungSerif-Regular.woff') format('woff'),
+    url('/fonts/young-serif/YoungSerif-Regular.ttf') format('truetype'),
+    url('/fonts/young-serif/YoungSerif-Regular.svg#youngserifregular') format('svg');
+  }
+
+  @font-face {
+    font-family: Circular-Book;
+    src:url('/fonts/circular/lineto-circular-book.eot');
+    src:url('/fonts/circular/lineto-circular-book.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/circular/lineto-circular-book.woff2') format('woff2'),
+    url('/fonts/circular/lineto-circular-book.woff') format('woff');
+  }
+
+  @font-face {
+    font-family: Circular-Bold;
+    src:url('/fonts/circular/lineto-circular-bold.eot');
+    src:url('/fonts/circular/lineto-circular-bold.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/circular/lineto-circular-bold.woff2') format('woff2'),
+    url('/fonts/circular/lineto-circular-bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  h1 {
+    @apply text-30-mobile lg:text-40;
+  }
+  h2 {
+    @apply text-28-mobile lg:text-38;
+  }
+  h3 {
+    @apply text-26-mobile lg:text-36;
+  }
+  h4 {
+    @apply text-24-mobile lg:text-34;
+  }
+  h5 {
+    @apply text-22-mobile lg:text-32;
+  }
+
+  p {
+    @apply text-16-mobile lg:text-16-tablet 2xl:text-16;
+  }
+
+}
