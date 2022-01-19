@@ -2,8 +2,8 @@
 <div id="cursor-container" :class="classes">
   <div v-if="this.$data.strokeCursor" id="stroke" ref="stroke"></div>
   <div id="cursor" ref="cursor">
-    <div v-if="this.$data.dotCursor" id="cursor-dot" ref="cursorDot" :style="{width: `${this.cursor.size}px`, height: `${this.cursor.size}px`}"></div>
-    <div v-if="this.$data.imageCursor" id="cursor-bg" :style="{ backgroundImage: 'url(' + this.cursorImage + ')' }"></div>
+    <div v-if="this.$data.dotCursor" id="cursor-dot" ref="cursorDot"></div>
+    <div v-if="this.$data.imageCursor" id="cursor-bg" :style="{ backgroundImage: 'url(' + this.$data.image.src + ')' }"></div>
     <div v-if="this.$data.sayHi" class="message">Hi I'm Mauvin</div>
   </div>
 </div>
@@ -54,6 +54,7 @@ export default {
         color: 'blue',
         size: 10,
         defualtSize: 30,
+        content: null,
       },
       strokeCursor: true,
       stroke: {
@@ -66,7 +67,10 @@ export default {
       magnet: {
         speed: 0.2,
       },
-      imageCursor: false,
+      imageCursor: true,
+      image: {
+        src: '/img/default.jpg'
+      },
       effectAllElementsInArea: false,
       RunMauvin: null,
       raf: null
@@ -156,7 +160,7 @@ export default {
       this.$store.commit('mouseStatus/elm', e.target);
       this.$store.commit('mouseStatus/activate', true);
       this.$data.mauvin.size = (e.target.dataset.mauvinsexpandingsize) ? e.target.dataset.mauvinsexpandingsize : this.$data.mauvin.size
-      if (this.$data.imageCursor) this.$store.commit('mouseStatus/addImages', e.target.dataset.mauvinbackgroundimage);
+      if (this.$data.imageCursor) this.$store.commit('mouseStatus/addImages', e.target.dataset.mauvinContent);
     },
     onMouseLeave(e) {
       this.$store.commit('mouseStatus/elm', '');
@@ -390,11 +394,13 @@ html {
         }
         /// Image Cursor image
         #cursor-bg {
+            position: relative;
             width: 100%;
             height: 100%;
             border-radius: 50%;
             background-repeat: none;
             background-size: cover;
+            z-index: 9999;
         }
     }
 

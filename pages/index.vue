@@ -4,7 +4,7 @@
     <div data-scroll-section class="grid grid-cols-12 gap-8 lg:gap-32 mx-8 lg:mx-64 mb-64 lg:mb-128">
       <div class="col-span-12 lg:col-span-12">
         <div id="project-content">
-          <div v-for="item, i in items" class="project-one-blist" data-mauvin-hover :data-mauvinBackgroundImage="item.img" :data-mauvinsExpandingSize="item.size" :data-mauvinsEmitsDistances="item.distance">
+          <div v-for="item, i in items" class="project-one-blist" data-mauvin-hover :data-mauvinContent="item.img" :data-mauvinsExpandingSize="item.size" :data-mauvinsEmitsDistances="item.distance">
             <img data-magnet class="img" :src="item.img" alt="img">
           </div>
         </div>
