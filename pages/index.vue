@@ -51,8 +51,6 @@
 import introAnimation from '~/mixins/introAnimation.js';
 import meta from '~/mixins/meta.js';
 import locoControls from '~/mixins/locoControls.js';
-// components
-
 
 export default {
   components: {},
@@ -79,10 +77,16 @@ export default {
     return {
       scroll: null,
       items: [{
-        img: '/img/cat.jpg',
-        size: 65,
-        distance: 100,
-      }]
+          img: '/img/cat.jpg',
+          size: 65,
+          distance: 100,
+        },
+        {
+          img: '/img/image.jpg',
+          size: 65,
+          distance: 100,
+        }
+      ]
     };
   },
   computed: {},

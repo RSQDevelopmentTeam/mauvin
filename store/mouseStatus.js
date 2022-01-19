@@ -2,7 +2,6 @@ export const state = () => ({
   coords: [-30, -30],
   active: false,
   elm: {},
-  cursorImage: 'img/default.jpg',
 });
 
 export const mutations = {

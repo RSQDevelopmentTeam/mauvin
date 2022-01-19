@@ -2,8 +2,8 @@
 <div id="cursor-container" :class="classes">
   <div v-if="this.$data.strokeCursor" id="stroke" ref="stroke"></div>
   <div id="cursor" ref="cursor">
-    <div v-if="this.$data.dotCursor" id="cursor-dot" ref="cursorDot"></div>
-    <div v-if="this.$data.imageCursor" id="cursor-bg" :style="{ backgroundImage: 'url(' + this.$data.image.src + ')' }"></div>
+    <div v-if="this.$data.dotCursor" id="mauvin-color" ref="cursorColor"></div>
+    <div v-if="this.$data.imageCursor" id="mauvin-image" :style="{ backgroundImage: 'url(' + this.$data.image.src + ')' }"></div>
     <div v-if="this.$data.sayHi" class="message">Hi I'm Mauvin</div>
   </div>
 </div>
@@ -61,7 +61,7 @@ export default {
         speed: 0.4,
         size: 25,
         borderColor: 'red',
-        borderStyle: 'dotted',
+        borderStyle: 'solid',
         borderWidth: 1
       },
       magnet: {
@@ -160,16 +160,14 @@ export default {
       this.$store.commit('mouseStatus/elm', e.target);
       this.$store.commit('mouseStatus/activate', true);
       this.$data.mauvin.size = (e.target.dataset.mauvinsexpandingsize) ? e.target.dataset.mauvinsexpandingsize : this.$data.mauvin.size
-      if (this.$data.imageCursor) this.$store.commit('mouseStatus/addImages', e.target.dataset.mauvinContent);
+      if (this.$data.imageCursor) this.$data.image.src = e.target.dataset.mauvincontent;
+      console.log(e.target.dataset.mauvincontent)
     },
     onMouseLeave(e) {
       this.$store.commit('mouseStatus/elm', '');
       this.$store.commit('mouseStatus/deactivate', false);
-      if (this.$data.imageCursor) this.$store.commit('mouseStatus/addImages', '/img/default.jpg');
+      if (this.$data.imageCursor) this.$data.image.src = '/img/default.jpg';
       this.$data.mauvin.size = this.$data.mauvin.defualtSize;
-    },
-    lerp(start, end, amt) {
-      return (1 - amt) * start + amt * end
     },
     hypotenuse(elm) {
       let element = elm.getBoundingClientRect();
@@ -228,6 +226,20 @@ export default {
         distance = distance / 33;
       }
       return distance;
+    },
+    sayHello() {
+      if (this.$data.sayHi) {
+        TweenMax.to('.message', 0.2, {
+          opacity: 1,
+          scale: 1,
+        });
+        setTimeout(() => {
+          TweenMax.to('.message', 0.2, {
+            opacity: 0,
+            scale: 0.3,
+          });
+        }, 2500)
+      }
     },
     startMauvin() {
       this.$data.RunMauvin = () => {
@@ -294,22 +306,10 @@ export default {
     if (!this.touchevents) {
       // Stroke Mouse Listener
       document.querySelector('body').addEventListener('mousemove', (e) => this.onMouseMove(e));
-      if (this.$data.sayHi) {
-        TweenMax.to('.message', 0.2, {
-          opacity: 1,
-          scale: 1,
-        });
-        setTimeout(() => {
-          TweenMax.to('.message', 0.2, {
-            opacity: 0,
-            scale: 0.3,
-          });
-        }, 2500)
-      }
 
+      this.sayHello();
 
-
-      this.$refs.cursorDot.style.setProperty('--color', this.$data.mauvin.color);
+      this.$refs.cursorColor.style.setProperty('--color', this.$data.mauvin.color);
 
       if (this.$data.strokeCursor) {
         this.$refs.stroke.style.setProperty('--style', this.$data.stroke.borderStyle);
@@ -358,10 +358,8 @@ export default {
   }
 };
 </script>
-
 <style lang="scss">
 $size: 10px;
-
 *,
 body,
 html {
@@ -384,7 +382,7 @@ html {
 
     #cursor {
         position: absolute;
-        #cursor-dot {
+        #mauvin-color {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -392,8 +390,8 @@ html {
             border-radius: 50%;
             background-color: var(--color);
         }
-        /// Image Cursor image
-        #cursor-bg {
+        // Image Cursor image
+        #mauvin-image {
             position: relative;
             width: 100%;
             height: 100%;
@@ -412,7 +410,7 @@ html {
         border-radius: 50%;
     }
 }
-//Developer Tool
+// Developer Tool
 .magnetic-size {
     position: absolute;
     top: 0;
@@ -436,7 +434,7 @@ html {
         transform: rotate(360deg);
     }
 }
-//Developer Tool
+// Developer Tool
 .hypotenuse {
     position: absolute;
     top: 0;
@@ -446,7 +444,7 @@ html {
     pointer-events: none;
 }
 
-/// Attributes in proxy
+// Attributes in proxy
 [data-inproxy='true'] {
     border: 5px solid var(--color);
 }
@@ -460,7 +458,7 @@ html {
         transition: transform 200ms ease-out;
     }
 }
-
+// Hello Message
 .message {
     font-size: 10px;
     position: absolute;
