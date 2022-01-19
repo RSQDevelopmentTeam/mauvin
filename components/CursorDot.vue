@@ -2,8 +2,9 @@
 <div id="cursor-container" :class="classes">
   <div v-if="this.$data.strokeCursor" id="stroke" ref="stroke"></div>
   <div id="cursor" ref="cursor">
-    <div v-if="this.$data.dotCursor" id="cursor-dot" :style="{width: `${this.cursor.size}px`, height: `${this.cursor.size}px`}"></div>
+    <div v-if="this.$data.dotCursor" id="cursor-dot" ref="cursorDot" :style="{width: `${this.cursor.size}px`, height: `${this.cursor.size}px`}"></div>
     <div v-if="this.$data.imageCursor" id="cursor-bg" :style="{ backgroundImage: 'url(' + this.cursorImage + ')' }"></div>
+    <div v-if="this.$data.sayHi" class="message">Hi I'm Mauvin</div>
   </div>
 </div>
 </template>
@@ -43,15 +44,26 @@ export default {
       coords: [-30, -30],
       elms: [],
       elmsData: [],
-      mauvinDefaultSize: 5,
-      speed: 0.2,
+      sayHi: true,
       showMagnetProxy: true,
       showCursorsProxyNum: true,
       dotCursor: true,
-      strokeCursor: false,
+      mauvin: {
+        speed: 0.2,
+        color: 'red',
+        size: 5
+      },
+      strokeCursor: true,
+      stroke: {
+        speed: 0.2,
+        size: 45,
+        borderColor: 'red',
+        borderStyle: 'dotted',
+        borderWidth: 1
+      },
       imageCursor: false,
       effectAllElementsInArea: false,
-      Mauvin: null,
+      RunMauvin: null,
       raf: null
     };
   },
@@ -62,6 +74,9 @@ export default {
         navigator.MaxTouchPoints > 0 ||
         navigator.msMaxTouchPoints > 0
       );
+    },
+    getStrokeWidth() {
+      return parseInt(this.$data.stroke.borderWidth)
     },
     mCoords() {
       return [this.coords[0], this.coords[1]];
@@ -79,7 +94,7 @@ export default {
     },
     cursor() {
       return {
-        size: parseInt(this.$data.mauvinDefaultSize)
+        size: parseInt(this.$data.mauvin.size)
       };
     },
     cursorImage() {
@@ -97,64 +112,7 @@ export default {
     }
   },
   methods: {
-    startMauvin() {
-      this.$data.Mauvin = () => {
-        // Mauvin
-        TweenMax.to(this.$refs.cursor, this.$data.speed, {
-          x: this.mCoords[0] - (this.cursor.size / 2),
-          y: this.mCoords[1] - (this.cursor.size / 2),
-          width: this.cursor.size,
-          height: this.cursor.size,
-        });
-        // Mauvin's Border Stroke
-        if (this.$data.strokeCursor) {
-          TweenMax.to(this.$refs.stroke, this.$data.speed, {
-            x: this.lerp(cursor.getBoundingClientRect().left - 7, this.mCoords[0], 0.1),
-            y: this.lerp(cursor.getBoundingClientRect().top - 7, this.mCoords[1], 0.1),
-            width: this.cursor.size + 10,
-            height: this.cursor.size + 10,
-          });
-        }
 
-        if (this.$data.elms.length > 0) {
-          // If element is in proxy and hovered over
-          if (!this.$data.effectAllElementsInArea) {
-            // Grab closest element
-            let closestToCursor = this.closestToCursor(this.$data.elms);
-            this.$data.elms.forEach((elm) => {
-              if (closestToCursor.elm === elm && elm.dataset.inproxy === "true") {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
-                  x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-                  y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-                });
-              } else {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
-                  x: 0,
-                  y: 0,
-                });
-              }
-            });
-          } else {
-            this.$data.elms.forEach((elm) => {
-              if (elm.dataset.inproxy === "true") {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
-                  x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-                  y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-                });
-              } else {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
-                  x: 0,
-                  y: 0,
-                });
-              }
-            });
-          }
-        }
-
-        this.$data.raf = requestAnimationFrame(this.$data.Mauvin);
-      }
-      this.$data.Mauvin();
-    },
     middleCircle(elm) {
       let top = elm.getBoundingClientRect().top + (elm.getBoundingClientRect().height / 2);
       let left = elm.getBoundingClientRect().right - (elm.getBoundingClientRect().width / 2);
@@ -193,14 +151,14 @@ export default {
     onMouseEnter(e) {
       this.$store.commit('mouseStatus/elm', e.target);
       this.$store.commit('mouseStatus/activate', true);
-      this.$store.commit('mouseStatus/updateSize', (e.target.dataset.size) ? e.target.dataset.size : this.$data.mauvinDefaultSize);
+      this.$store.commit('mouseStatus/updateSize', (e.target.dataset.size) ? e.target.dataset.size : this.$data.mauvin.size);
       if (this.$data.imageCursor) this.$store.commit('mouseStatus/addImages', e.target.dataset.img);
     },
     onMouseLeave(e) {
       this.$store.commit('mouseStatus/elm', '');
       this.$store.commit('mouseStatus/deactivate', false);
       if (this.$data.imageCursor) this.$store.commit('mouseStatus/addImages', '/img/default.jpg');
-      this.$store.commit('mouseStatus/updateSize', this.$data.mauvinDefaultSize);
+      this.$store.commit('mouseStatus/updateSize', this.$data.mauvin.size);
     },
     lerp(start, end, amt) {
       return (1 - amt) * start + amt * end
@@ -244,7 +202,6 @@ export default {
             magnetSize.style.width = `${this.getMangetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
             elm.appendChild(magnetSize);
           }
-
         });
       }
     },
@@ -264,12 +221,90 @@ export default {
       }
       return distance;
     },
+    startMauvin() {
+      this.$data.RunMauvin = () => {
+        // Mauvin
+        TweenMax.to(this.$refs.cursor, this.$data.mauvin.speed, {
+          x: this.mCoords[0] - (this.cursor.size / 2),
+          y: this.mCoords[1] - (this.cursor.size / 2),
+          width: this.cursor.size,
+          height: this.cursor.size,
+        });
+        // Mauvin's Border Stroke
+        if (this.$data.strokeCursor) {
+          TweenMax.to(this.$refs.stroke, this.$data.stroke.speed, {
+            y: this.lerp((cursor.getBoundingClientRect().top - (this.$data.stroke.size / 2)), this.mCoords[1], 0.1),
+            x: this.lerp((cursor.getBoundingClientRect().left - (this.$data.stroke.size / 2)), this.mCoords[0], 0.1),
+            width: this.stroke.size,
+            height: this.stroke.size,
+          });
+        }
+
+        if (this.$data.elms.length > 0) {
+          // If element is in proxy and hovered over
+          if (!this.$data.effectAllElementsInArea) {
+            // Grab closest element
+            let closestToCursor = this.closestToCursor(this.$data.elms);
+
+            this.$data.elms.forEach((elm) => {
+              if (closestToCursor.elm === elm && elm.dataset.inproxy === "true") {
+                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
+                  x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
+                  y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
+                });
+              } else {
+                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
+                  x: 0,
+                  y: 0,
+                });
+              }
+            });
+          } else {
+            this.$data.elms.forEach((elm) => {
+              if (elm.dataset.inproxy === "true") {
+                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
+                  x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
+                  y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
+                });
+              } else {
+                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
+                  x: 0,
+                  y: 0,
+                });
+              }
+            });
+          }
+        }
+        this.$data.raf = requestAnimationFrame(this.$data.RunMauvin);
+      }
+      this.$data.RunMauvin();
+    },
   },
   mounted: function() {
     if (!this.touchevents) {
-      document.body.style.cursor = 'none';
+      // document.body.style.cursor = 'none';
       // Stroke Mouse Listener
       document.querySelector('body').addEventListener('mousemove', (e) => this.onMouseMove(e));
+
+
+      if (this.$data.sayHi) {
+        document.querySelector('.message').classList.add('sayHi');
+        setTimeout(() => {
+          document.querySelector('.message').classList.remove('sayHi');
+        }, 2500)
+      }
+
+
+      this.$refs.cursorDot.style.setProperty('--color', this.$data.mauvin.color);
+
+      if (this.$data.strokeCursor) {
+        this.$refs.stroke.style.setProperty('--style', this.$data.stroke.borderStyle);
+        this.$refs.stroke.style.setProperty('--color', this.$data.stroke.borderColor);
+        this.$refs.stroke.style.setProperty('--stroke', this.$data.stroke.borderWidth + "px");
+        this.$refs.stroke.style.setProperty('--height', this.$data.stroke.size + "px");
+        this.$refs.stroke.style.setProperty('--width', this.$data.stroke.size + "px");
+      }
+
       // Grab Elements
       this.$data.elms = [...document.querySelectorAll('[data-cursor-hover]')];
 
@@ -295,7 +330,6 @@ export default {
       }
       // Start Cursor
       this.startMauvin();
-
     }
   },
   beforeDestroy: function() {
@@ -313,8 +347,12 @@ export default {
 
 <style lang="scss">
 $size: 10px;
-$color: red;
 
+*,
+body,
+html {
+    cursor: none;
+}
 #cursor-container {
     position: fixed;
     width: 100%;
@@ -331,20 +369,14 @@ $color: red;
     }
 
     #cursor {
-        width: $size;
-        height: $size;
-
+        position: absolute;
         #cursor-dot {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
             width: 100%;
             height: 100%;
             margin: auto;
             border-radius: 50%;
-            background-color: $color;
+            background-color: var(--color);
         }
         /// Image Cursor image
         #cursor-bg {
@@ -358,12 +390,10 @@ $color: red;
 
     #stroke {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: $size;
-        height: $size;
+        width: var(--width);
+        height: var(--height);
+        border: var(--stroke) var(--style) var(--color);
         border-radius: 50%;
-        border: 1px solid $color;
     }
 }
 //Developer Tool
@@ -375,7 +405,7 @@ $color: red;
     left: 0;
     margin: auto;
     border-radius: 50%;
-    border: 2px dashed $color;
+    border: 1px dashed var(--color);
     z-index: 1;
     pointer-events: none;
     animation: magnetic-size 120s infinite;
@@ -396,18 +426,37 @@ $color: red;
     top: 0;
     left: 0;
     padding: 5px 10px;
-    background-color: red;
+    background-color: var(--color);
     pointer-events: none;
 }
 
 /// Attributes in proxy
 [data-inproxy='true'] {
-    border: 5px solid red;
+    border: 5px solid var(--color);
 }
 
 [data-cursor-hover] {
     [data-magnet] {
         transition: transform 200ms ease-out;
     }
+}
+
+.message {
+    font-size: 10px;
+    position: absolute;
+    box-shadow: 0 0 5px 1px #1c1c1c26;
+    background-color: white;
+    padding: 3px 5px;
+    left: 26px;
+    width: 80px;
+    text-align: center;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 200ms ease-out;
+
+    &.sayHi {
+        opacity: 1;
+    }
+
 }
 </style>
