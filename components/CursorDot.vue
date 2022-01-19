@@ -31,7 +31,8 @@ Style
 Element has [inproxy='true'] when cursor position is in proxy distance
 */
 import {
-  TweenMax
+  TweenMax,
+  Elastic
 } from 'gsap';
 import touchevents from '~/mixins/touchevents';
 export default {
@@ -50,16 +51,20 @@ export default {
       dotCursor: true,
       mauvin: {
         speed: 0.2,
-        color: 'red',
-        size: 5
+        color: 'blue',
+        size: 10,
+        defualtSize: 30,
       },
       strokeCursor: true,
       stroke: {
-        speed: 0.2,
-        size: 45,
+        speed: 0.4,
+        size: 25,
         borderColor: 'red',
         borderStyle: 'dotted',
         borderWidth: 1
+      },
+      magnet: {
+        speed: 0.2,
       },
       imageCursor: false,
       effectAllElementsInArea: false,
@@ -112,7 +117,6 @@ export default {
     }
   },
   methods: {
-
     middleCircle(elm) {
       let top = elm.getBoundingClientRect().top + (elm.getBoundingClientRect().height / 2);
       let left = elm.getBoundingClientRect().right - (elm.getBoundingClientRect().width / 2);
@@ -129,7 +133,7 @@ export default {
       this.setAttributes(elm, {
         'data-hypotenuse': this.hypotenuse(elm),
         'data-index': i,
-        'data-inProxy': (elm.dataset.distance) ? this.hypotenuse(elm) <= elm.dataset.distance : 'proxyoff'
+        'data-inProxy': (elm.dataset.mauvinsemitsdistances) ? this.hypotenuse(elm) <= elm.dataset.mauvinsemitsdistances : 'proxyoff'
       });
       // Developer Tool
       if (this.$data.showCursorsProxyNum) elm.querySelector('.hypotenuse').innerHTML = Math.round(elm.dataset.hypotenuse);
@@ -151,14 +155,14 @@ export default {
     onMouseEnter(e) {
       this.$store.commit('mouseStatus/elm', e.target);
       this.$store.commit('mouseStatus/activate', true);
-      this.$store.commit('mouseStatus/updateSize', (e.target.dataset.size) ? e.target.dataset.size : this.$data.mauvin.size);
-      if (this.$data.imageCursor) this.$store.commit('mouseStatus/addImages', e.target.dataset.img);
+      this.$data.mauvin.size = (e.target.dataset.mauvinsexpandingsize) ? e.target.dataset.mauvinsexpandingsize : this.$data.mauvin.size
+      if (this.$data.imageCursor) this.$store.commit('mouseStatus/addImages', e.target.dataset.mauvinbackgroundimage);
     },
     onMouseLeave(e) {
       this.$store.commit('mouseStatus/elm', '');
       this.$store.commit('mouseStatus/deactivate', false);
       if (this.$data.imageCursor) this.$store.commit('mouseStatus/addImages', '/img/default.jpg');
-      this.$store.commit('mouseStatus/updateSize', this.$data.mauvin.size);
+      this.$data.mauvin.size = this.$data.mauvin.defualtSize;
     },
     lerp(start, end, amt) {
       return (1 - amt) * start + amt * end
@@ -195,7 +199,7 @@ export default {
     createMagnetProxy(elm) {
       if (document.querySelectorAll('.magnetic-size').length !== this.$data.elms.length) {
         elm.forEach((elm) => {
-          if (elm.dataset.distance !== undefined) {
+          if (elm.dataset.mauvinsemitsdistances !== undefined) {
             let magnetSize = document.createElement("div");
             magnetSize.className = 'magnetic-size';
             magnetSize.style.height = `${this.getMangetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
@@ -213,8 +217,8 @@ export default {
     },
     getMangetProxy(elm, width, height) {
       let distance;
-      if (elm.dataset.distance) {
-        distance = elm.dataset.distance * 2;
+      if (elm.dataset.mauvinsemitsdistances) {
+        distance = elm.dataset.mauvinsemitsdistances * 2;
       } else if (distance === undefined) {
         distance = (height < width) ? width : height;
         distance = distance / 33;
@@ -232,14 +236,16 @@ export default {
         });
         // Mauvin's Border Stroke
         if (this.$data.strokeCursor) {
+          let size = this.stroke.size + (this.cursor.size);
           TweenMax.to(this.$refs.stroke, this.$data.stroke.speed, {
-            y: this.lerp((cursor.getBoundingClientRect().top - (this.$data.stroke.size / 2)), this.mCoords[1], 0.1),
-            x: this.lerp((cursor.getBoundingClientRect().left - (this.$data.stroke.size / 2)), this.mCoords[0], 0.1),
-            width: this.stroke.size,
-            height: this.stroke.size,
+            y: (this.mCoords[1] - (size / 2)),
+            x: (this.mCoords[0] - (size / 2)),
+            width: size,
+            height: size,
           });
         }
 
+        // console.log(this.stroke.size, this.cursor.size)
         if (this.$data.elms.length > 0) {
           // If element is in proxy and hovered over
           if (!this.$data.effectAllElementsInArea) {
@@ -248,12 +254,12 @@ export default {
 
             this.$data.elms.forEach((elm) => {
               if (closestToCursor.elm === elm && elm.dataset.inproxy === "true") {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
+                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
                   x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
                   y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
                 });
               } else {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
+                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
                   x: 0,
                   y: 0,
                 });
@@ -262,12 +268,12 @@ export default {
           } else {
             this.$data.elms.forEach((elm) => {
               if (elm.dataset.inproxy === "true") {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
+                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
                   x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
                   y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
                 });
               } else {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.speed, {
+                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
                   x: 0,
                   y: 0,
                 });
@@ -282,17 +288,21 @@ export default {
   },
   mounted: function() {
     if (!this.touchevents) {
-      // document.body.style.cursor = 'none';
       // Stroke Mouse Listener
       document.querySelector('body').addEventListener('mousemove', (e) => this.onMouseMove(e));
-
-
       if (this.$data.sayHi) {
-        document.querySelector('.message').classList.add('sayHi');
+        TweenMax.to('.message', 0.2, {
+          opacity: 1,
+          scale: 1,
+        });
         setTimeout(() => {
-          document.querySelector('.message').classList.remove('sayHi');
+          TweenMax.to('.message', 0.2, {
+            opacity: 0,
+            scale: 0.3,
+          });
         }, 2500)
       }
+
 
 
       this.$refs.cursorDot.style.setProperty('--color', this.$data.mauvin.color);
@@ -306,7 +316,7 @@ export default {
       }
 
       // Grab Elements
-      this.$data.elms = [...document.querySelectorAll('[data-cursor-hover]')];
+      this.$data.elms = [...document.querySelectorAll('[data-mauvin-hover]')];
 
       if (this.$data.elms.length > 0) {
         // Add Mouse Listners to grab elements
@@ -357,7 +367,7 @@ html {
     position: fixed;
     width: 100%;
     height: 100%;
-    z-index: 99999999;
+    z-index: 999;
     pointer-events: none;
     top: 0;
     left: 0;
@@ -435,8 +445,12 @@ html {
     border: 5px solid var(--color);
 }
 
-[data-cursor-hover] {
+[data-mauvin-hover] {
+    position: relative;
+
     [data-magnet] {
+        width: 100%;
+        height: 100%;
         transition: transform 200ms ease-out;
     }
 }
@@ -445,18 +459,16 @@ html {
     font-size: 10px;
     position: absolute;
     box-shadow: 0 0 5px 1px #1c1c1c26;
-    background-color: white;
+    background-color: black;
+    color: White;
     padding: 3px 5px;
-    left: 26px;
+    top: -20px;
+    left: 20px;
     width: 80px;
     text-align: center;
     border-radius: 8px;
     opacity: 0;
-    transition: opacity 200ms ease-out;
-
-    &.sayHi {
-        opacity: 1;
-    }
-
+    transform-origin: top left;
+    z-index: 999999;
 }
 </style>
