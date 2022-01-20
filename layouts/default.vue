@@ -1,6 +1,6 @@
 <template>
 <div id="app" data-scroll-container :class="[{'touchevents': touchevents, 'no-touchevents': !touchevents }, `${browserClass}`]">
-  <Nav />
+  <!-- <Nav /> -->
   <CursorDot />
   <nuxt />
 </div>

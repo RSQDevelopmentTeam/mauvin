@@ -1,10 +1,10 @@
 <template>
-<div id="cursor-container" :class="classes">
-  <div v-if="this.$data.strokeCursor" id="stroke" ref="stroke"></div>
-  <div id="cursor" ref="cursor">
-    <div v-if="this.$data.dotCursor" id="mauvin-color" ref="cursorColor"></div>
-    <div v-if="this.$data.imageCursor" id="mauvin-image" :style="{ backgroundImage: 'url(' + this.$data.image.src + ')' }"></div>
-    <div v-if="this.$data.sayHi" class="message">Hi I'm Mauvin</div>
+<div id="mauvin-container" :class="classes">
+  <div v-if="this.$data.strokeCursor" id="mauvin-stroke" ref="mauvinStroke"></div>
+  <div id="mauvin" ref="mauvinCursor">
+    <div v-if="this.$data.dotCursor" id="mauvin-color" ref="mauvinColor"></div>
+    <div v-if="this.$data.imageCursor" id="mauvin-image" ref="mauvinImage" :style="{ backgroundImage: 'url(' + this.$data.image.src + ')' }"></div>
+    <div v-if="this.$data.sayHi" class="mauvin-message">Hi I'm Mauvin</div>
   </div>
 </div>
 </template>
@@ -32,7 +32,6 @@ Element has [inproxy='true'] when cursor position is in proxy distance
 */
 import {
   TweenMax,
-  Elastic
 } from 'gsap';
 import touchevents from '~/mixins/touchevents';
 export default {
@@ -55,6 +54,7 @@ export default {
         size: 10,
         defualtSize: 30,
         content: null,
+        borderRaidus: '50%',
       },
       strokeCursor: true,
       stroke: {
@@ -62,14 +62,25 @@ export default {
         size: 25,
         borderColor: 'red',
         borderStyle: 'solid',
-        borderWidth: 1
+        borderWidth: 1,
+        borderRaidus: '50%',
       },
       magnet: {
         speed: 0.2,
       },
       imageCursor: true,
       image: {
-        src: '/img/default.jpg'
+        src: '/img/default.jpg',
+        borderRaidus: '50%'
+      },
+      floatCursor: false,
+      floatingCursor: {
+        speed: 0.4,
+        size: 25,
+        borderColor: 'red',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderRaidus: '50%',
       },
       effectAllElementsInArea: false,
       RunMauvin: null,
@@ -121,6 +132,19 @@ export default {
     }
   },
   methods: {
+    floatUp() {
+      let size = Math.random() * 20;
+      let circle = document.createElement('div');
+      circle.className = 'floatUp'
+      circle.style.left = this.mCoords[0] + "px";
+      circle.style.top = this.mCoords[1] + "px";
+      circle.style.width = 10 + size + "px";
+      circle.style.height = 10 + size + "px";
+      document.querySelector('body').appendChild(circle);
+      setTimeout(function() {
+        circle.remove();
+      }, 2000);
+    },
     middleCircle(elm) {
       let top = elm.getBoundingClientRect().top + (elm.getBoundingClientRect().height / 2);
       let left = elm.getBoundingClientRect().right - (elm.getBoundingClientRect().width / 2);
@@ -156,12 +180,20 @@ export default {
       this.$data.coords = [e.clientX, e.clientY];
       this.$store.commit('mouseStatus/updateCoords', [e.clientX, e.clientY]);
     },
+    createStroke() {
+      let size = this.stroke.size + (this.cursor.size);
+      TweenMax.to(this.$refs.mauvinStroke, this.$data.stroke.speed, {
+        y: (this.mCoords[1] - (size / 2)),
+        x: (this.mCoords[0] - (size / 2)),
+        width: size,
+        height: size,
+      });
+    },
     onMouseEnter(e) {
       this.$store.commit('mouseStatus/elm', e.target);
       this.$store.commit('mouseStatus/activate', true);
       this.$data.mauvin.size = (e.target.dataset.mauvinsexpandingsize) ? e.target.dataset.mauvinsexpandingsize : this.$data.mauvin.size
       if (this.$data.imageCursor) this.$data.image.src = e.target.dataset.mauvincontent;
-      console.log(e.target.dataset.mauvincontent)
     },
     onMouseLeave(e) {
       this.$store.commit('mouseStatus/elm', '');
@@ -188,7 +220,7 @@ export default {
     setAttributes(el, attrs) {
       Object.keys(attrs).forEach(key => el.setAttribute(key, attrs[key]));
     },
-    showMauveLocation() {
+    showMauvinLocation() {
       if (document.querySelectorAll('.hypotenuse').length !== this.$data.elms.length) {
         this.$data.elms.forEach((elm, i) => {
           let cursorProxyData = document.createElement("div");
@@ -229,12 +261,12 @@ export default {
     },
     sayHello() {
       if (this.$data.sayHi) {
-        TweenMax.to('.message', 0.2, {
+        TweenMax.to('.mauvin-message', 0.2, {
           opacity: 1,
           scale: 1,
         });
         setTimeout(() => {
-          TweenMax.to('.message', 0.2, {
+          TweenMax.to('.mauvin-message', 0.2, {
             opacity: 0,
             scale: 0.3,
           });
@@ -243,31 +275,23 @@ export default {
     },
     startMauvin() {
       this.$data.RunMauvin = () => {
+
+        // this.middleCircle(elm)
         // Mauvin
-        TweenMax.to(this.$refs.cursor, this.$data.mauvin.speed, {
+        TweenMax.to(this.$refs.mauvinCursor, this.$data.mauvin.speed, {
           x: this.mCoords[0] - (this.cursor.size / 2),
           y: this.mCoords[1] - (this.cursor.size / 2),
           width: this.cursor.size,
           height: this.cursor.size,
         });
         // Mauvin's Border Stroke
-        if (this.$data.strokeCursor) {
-          let size = this.stroke.size + (this.cursor.size);
-          TweenMax.to(this.$refs.stroke, this.$data.stroke.speed, {
-            y: (this.mCoords[1] - (size / 2)),
-            x: (this.mCoords[0] - (size / 2)),
-            width: size,
-            height: size,
-          });
-        }
+        if (this.$data.strokeCursor) this.createStroke()
 
-        // console.log(this.stroke.size, this.cursor.size)
         if (this.$data.elms.length > 0) {
           // If element is in proxy and hovered over
           if (!this.$data.effectAllElementsInArea) {
             // Grab closest element
             let closestToCursor = this.closestToCursor(this.$data.elms);
-
             this.$data.elms.forEach((elm) => {
               if (closestToCursor.elm === elm && elm.dataset.inproxy === "true") {
                 TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
@@ -297,6 +321,9 @@ export default {
             });
           }
         }
+
+        if (this.$data.floatCursor) this.floatUp();
+
         this.$data.raf = requestAnimationFrame(this.$data.RunMauvin);
       }
       this.$data.RunMauvin();
@@ -304,24 +331,31 @@ export default {
   },
   mounted: function() {
     if (!this.touchevents) {
+      let mauvin = this.$refs.mauvinCursor
+      let mauvinStroke = this.$refs.mauvinStroke;
+      let mauvinImage = this.$refs.mauvinImage;
       // Stroke Mouse Listener
       document.querySelector('body').addEventListener('mousemove', (e) => this.onMouseMove(e));
-
-      this.sayHello();
-
-      this.$refs.cursorColor.style.setProperty('--color', this.$data.mauvin.color);
+      // Setting Style Options On Mauvin
+      mauvin.style.setProperty('--color', this.$data.mauvin.color);
+      mauvin.style.setProperty('--mauvinRadius', this.$data.mauvin.borderRaidus);
+      // Setting Style Options On Mauvin's Stroke Border
 
       if (this.$data.strokeCursor) {
-        this.$refs.stroke.style.setProperty('--style', this.$data.stroke.borderStyle);
-        this.$refs.stroke.style.setProperty('--color', this.$data.stroke.borderColor);
-        this.$refs.stroke.style.setProperty('--stroke', this.$data.stroke.borderWidth + "px");
-        this.$refs.stroke.style.setProperty('--height', this.$data.stroke.size + "px");
-        this.$refs.stroke.style.setProperty('--width', this.$data.stroke.size + "px");
+        mauvinStroke.style.setProperty('--style', this.$data.stroke.borderStyle);
+        mauvinStroke.style.setProperty('--color', this.$data.stroke.borderColor);
+        mauvinStroke.style.setProperty('--stroke', this.$data.stroke.borderWidth + "px");
+        mauvinStroke.style.setProperty('--mauvinStrokeRadius', this.$data.stroke.borderRaidus);
+        mauvinStroke.style.setProperty('--height', this.$data.stroke.size + "px");
+        mauvinStroke.style.setProperty('--width', this.$data.stroke.size + "px");
       }
-
+      // Setting Style Options On Mauvin's Image
+      if (this.$data.imageCursor) {
+        mauvinImage.style.setProperty('--mauvinImageRadius', this.$data.image.borderRaidus);
+      }
       // Grab Elements
       this.$data.elms = [...document.querySelectorAll('[data-mauvin-hover]')];
-
+      // let's Grab elements that are needed
       if (this.$data.elms.length > 0) {
         // Add Mouse Listners to grab elements
         this.$data.elms.forEach((elm, i) => {
@@ -335,15 +369,19 @@ export default {
           });
         });
         // Developer helper tool
-        if (this.$data.showCursorsProxyNum) this.showMauveLocation();
+        if (this.$data.showCursorsProxyNum) this.showMauvinLocation();
         // Developer helper tool
         if (this.$data.showMagnetProxy) {
           window.addEventListener('resize', () => this.updateMangetProxy(this.$data.elms));
           this.createMagnetProxy(this.$data.elms);
         }
       }
+
       // Start Cursor
       this.startMauvin();
+
+      //introduction
+      this.sayHello();
     }
   },
   beforeDestroy: function() {
@@ -360,12 +398,10 @@ export default {
 </script>
 <style lang="scss">
 $size: 10px;
-*,
-body,
-html {
+body {
     cursor: none;
 }
-#cursor-container {
+#mauvin-container {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -380,36 +416,52 @@ html {
         width: $size + 10;
     }
 
-    #cursor {
+    #mauvin {
         position: absolute;
+        will-change: transform;
         #mauvin-color {
             position: absolute;
             width: 100%;
             height: 100%;
             margin: auto;
-            border-radius: 50%;
+            border-radius: var(--mauvinRadius);
             background-color: var(--color);
         }
-        // Image Cursor image
         #mauvin-image {
             position: relative;
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            background-repeat: none;
+            border-radius: var(--mauvinImageRadius);
+            background-image: no-repeat;
             background-size: cover;
             z-index: 9999;
         }
     }
-
-    #stroke {
+    #mauvin-stroke {
         position: absolute;
+        will-change: transform;
         width: var(--width);
         height: var(--height);
         border: var(--stroke) var(--style) var(--color);
-        border-radius: 50%;
+        border-radius: var(--mauvinStrokeRadius);
     }
 }
+
+// Attributes in proxy
+[data-inproxy='true'] {
+    border: 5px solid var(--color);
+}
+
+[data-mauvin-hover] {
+    position: relative;
+
+    [data-magnet] {
+        width: 100%;
+        height: 100%;
+        transition: transform 200ms ease-out;
+    }
+}
+
 // Developer Tool
 .magnetic-size {
     position: absolute;
@@ -442,24 +494,33 @@ html {
     padding: 5px 10px;
     background-color: var(--color);
     pointer-events: none;
+    font-size: 16px;
 }
 
-// Attributes in proxy
-[data-inproxy='true'] {
-    border: 5px solid var(--color);
+.floatUp {
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    border-radius: 50px;
+    pointer-events: none;
+    background: red;
+    transform: translate(-50%, -50%);
+    animation: blow 40s linear infinite;
 }
 
-[data-mauvin-hover] {
-    position: relative;
-
-    [data-magnet] {
-        width: 100%;
-        height: 100%;
-        transition: transform 200ms ease-out;
+@keyframes blow {
+    0% {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -1000%);
+        opacity: 0;
     }
 }
+
 // Hello Message
-.message {
+.mauvin-message {
     font-size: 10px;
     position: absolute;
     box-shadow: 0 0 5px 1px #1c1c1c26;
