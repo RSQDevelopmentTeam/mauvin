@@ -9,27 +9,6 @@
 </div>
 </template>
 <script>
-/*
-Element
-
-Select elements by using data-cursor-hover
-Providing an background image for cursor  :data-img="item.img"
-Change size of cursor :data-size="item.size"
-Giving Proxy Distance :data-distance="item.distance"
-Hypotenuse is the distance between center of element and cursor
-InProxy Attbutes will be set to true if the elements is in distance givin
-
-initial Mount
-
-Select Body & add mouseMove Listener
-Select Elements
-Add mouseEnter & mouseLeave Listener to elements
-Fire startCursor Function
-
-Style
-
-Element has [inproxy='true'] when cursor position is in proxy distance
-*/
 import {
   TweenMax,
 } from 'gsap';
@@ -42,11 +21,17 @@ export default {
   data() {
     return {
       coords: [-30, -30],
+      moving: false,
+      direction: '',
+      oldx: 0,
+      movingActionTime: {},
+      stopMovingActionTime: 250,
       elms: [],
       elmsData: [],
-      sayHi: true,
-      showMagnetProxy: true,
-      showCursorsProxyNum: true,
+      magnetElms: [],
+      sayHi: false,
+      showMagnetProxy: false,
+      showCursorsProxyNum: false,
       dotCursor: true,
       mauvin: {
         speed: 0.2,
@@ -73,7 +58,7 @@ export default {
         src: '/img/default.jpg',
         borderRaidus: '50%'
       },
-      floatCursor: false,
+      floatCursor: true,
       floatingCursor: {
         speed: 0.4,
         size: 25,
@@ -132,18 +117,20 @@ export default {
     }
   },
   methods: {
-    floatUp() {
-      let size = Math.random() * 20;
-      let circle = document.createElement('div');
-      circle.className = 'floatUp'
-      circle.style.left = this.mCoords[0] + "px";
-      circle.style.top = this.mCoords[1] + "px";
-      circle.style.width = 10 + size + "px";
-      circle.style.height = 10 + size + "px";
-      document.querySelector('body').appendChild(circle);
-      setTimeout(function() {
-        circle.remove();
-      }, 2000);
+    gooey() {
+      let o = document.querySelector('.box').getBoundingClientRect();
+      TweenMax.to('.dot', this.$data.magnet.speed, {
+        x: this.mCoords[0],
+        y: this.mCoords[1],
+      });
+    },
+    detectMouseMovement() {
+      this.$data.moving = true;
+      clearTimeout(this.$data.movingActionTime);
+      this.$data.movingActionTime = setTimeout(() => {
+        this.$data.moving = false;
+        this.$data.direction = '';
+      }, this.$data.stopMovingActionTime);
     },
     middleCircle(elm) {
       let top = elm.getBoundingClientRect().top + (elm.getBoundingClientRect().height / 2);
@@ -179,15 +166,14 @@ export default {
     onMouseMove(e) {
       this.$data.coords = [e.clientX, e.clientY];
       this.$store.commit('mouseStatus/updateCoords', [e.clientX, e.clientY]);
-    },
-    createStroke() {
-      let size = this.stroke.size + (this.cursor.size);
-      TweenMax.to(this.$refs.mauvinStroke, this.$data.stroke.speed, {
-        y: (this.mCoords[1] - (size / 2)),
-        x: (this.mCoords[0] - (size / 2)),
-        width: size,
-        height: size,
-      });
+      this.detectMouseMovement();
+      if (this.mCoords[0] < this.$data.oldx) {
+        this.$data.direction = "left"
+      } else if (this.mCoords[0] > this.$data.oldx) {
+        this.$data.direction = "right"
+      }
+      this.$data.oldx = this.mCoords[0];
+
     },
     onMouseEnter(e) {
       this.$store.commit('mouseStatus/elm', e.target);
@@ -220,6 +206,18 @@ export default {
     setAttributes(el, attrs) {
       Object.keys(attrs).forEach(key => el.setAttribute(key, attrs[key]));
     },
+    createStroke() {
+      let size = this.stroke.size + (this.cursor.size);
+      TweenMax.to(this.$refs.mauvinStroke, this.$data.stroke.speed, {
+        y: (this.mCoords[1] - (size / 2)),
+        x: (this.mCoords[0] - (size / 2)),
+        width: size,
+        height: size,
+      });
+    },
+    floatUp() {
+
+    },
     showMauvinLocation() {
       if (document.querySelectorAll('.hypotenuse').length !== this.$data.elms.length) {
         this.$data.elms.forEach((elm, i) => {
@@ -236,20 +234,20 @@ export default {
           if (elm.dataset.mauvinsemitsdistances !== undefined) {
             let magnetSize = document.createElement("div");
             magnetSize.className = 'magnetic-size';
-            magnetSize.style.height = `${this.getMangetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
-            magnetSize.style.width = `${this.getMangetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
+            magnetSize.style.height = `${this.getMagnetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
+            magnetSize.style.width = `${this.getMagnetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
             elm.appendChild(magnetSize);
           }
         });
       }
     },
-    updateMangetProxy(elm) {
+    updateMagnetProxy(elm) {
       elm.forEach((elm) => {
-        elm.querySelector('.magnetic-size').style.height = `${this.getMangetProxy(elm,elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
-        elm.querySelector('.magnetic-size').style.width = `${this.getMangetProxy(elm,elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
+        elm.querySelector('.magnetic-size').style.height = `${this.getMagnetProxy(elm,elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
+        elm.querySelector('.magnetic-size').style.width = `${this.getMagnetProxy(elm,elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
       })
     },
-    getMangetProxy(elm, width, height) {
+    getMagnetProxy(elm, width, height) {
       let distance;
       if (elm.dataset.mauvinsemitsdistances) {
         distance = elm.dataset.mauvinsemitsdistances * 2;
@@ -258,6 +256,18 @@ export default {
         distance = distance / 33;
       }
       return distance;
+    },
+    magnetTween(elm) {
+      TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
+        x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
+        y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
+      });
+    },
+    magnetTweenReset(elm) {
+      TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
+        x: 0,
+        y: 0,
+      });
     },
     sayHello() {
       if (this.$data.sayHi) {
@@ -275,8 +285,40 @@ export default {
     },
     startMauvin() {
       this.$data.RunMauvin = () => {
+        console.log(this.$data.direction)
+        // this.gooey();
 
-        // this.middleCircle(elm)
+        if (this.$data.moving) {
+          if (this.$data.direction === 'right') {
+            TweenMax.to('#mauvin-person', 2, {
+              x: 30,
+              y: 0,
+              rotation: 12,
+            });
+          } else if (this.$data.direction === 'left') {
+            TweenMax.to('#mauvin-person', 2, {
+              x: -30,
+              y: 0,
+              rotation: -22,
+            });
+          }
+
+          document.querySelector('#moving-action').classList.add('move');
+        } else {
+          TweenMax.to('#mauvin-person', 2, {
+            x: 0,
+            y: 0,
+            rotation: 0,
+          });
+          document.querySelector('#moving-action').classList.remove('move');
+        }
+
+        TweenMax.to('.inside', this.$data.mauvin.speed, {
+          x: -(this.mCoords[0] - (this.cursor.size / 2)),
+          y: -(this.mCoords[1] - (this.cursor.size / 2)),
+        });
+
+
         // Mauvin
         TweenMax.to(this.$refs.mauvinCursor, this.$data.mauvin.speed, {
           x: this.mCoords[0] - (this.cursor.size / 2),
@@ -285,41 +327,30 @@ export default {
           height: this.cursor.size,
         });
         // Mauvin's Border Stroke
-        if (this.$data.strokeCursor) this.createStroke()
-
+        if (this.$data.strokeCursor) this.createStroke();
         if (this.$data.elms.length > 0) {
           // If element is in proxy and hovered over
-          if (!this.$data.effectAllElementsInArea) {
-            // Grab closest element
-            let closestToCursor = this.closestToCursor(this.$data.elms);
-            this.$data.elms.forEach((elm) => {
+          this.$data.elms.forEach((elm) => {
+            if (!this.$data.effectAllElementsInArea) {
+              let closestToCursor = this.closestToCursor(this.$data.elms);
+              // console.log(this.middleCircle(elm))
+              // TweenMax.to('#test', this.$data.magnet.speed, {
+              //   x: this.middleCircle(elm).x,
+              //   y: this.middleCircle(elm).y,
+              // });
               if (closestToCursor.elm === elm && elm.dataset.inproxy === "true") {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
-                  x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-                  y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-                });
+                this.magnetTween(elm);
               } else {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
-                  x: 0,
-                  y: 0,
-                });
+                this.magnetTweenReset(elm);
               }
-            });
-          } else {
-            this.$data.elms.forEach((elm) => {
+            } else {
               if (elm.dataset.inproxy === "true") {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
-                  x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-                  y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-                });
+                this.magnetTween(elm);
               } else {
-                TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
-                  x: 0,
-                  y: 0,
-                });
+                this.magnetTweenReset(elm);
               }
-            });
-          }
+            }
+          });
         }
 
         if (this.$data.floatCursor) this.floatUp();
@@ -355,6 +386,10 @@ export default {
       }
       // Grab Elements
       this.$data.elms = [...document.querySelectorAll('[data-mauvin-hover]')];
+      // Grab magnet
+      this.$data.magnetElms = [...document.querySelectorAll('[data-magnet]')];
+      console.log(this.$data.magnetElms);
+
       // let's Grab elements that are needed
       if (this.$data.elms.length > 0) {
         // Add Mouse Listners to grab elements
@@ -372,14 +407,12 @@ export default {
         if (this.$data.showCursorsProxyNum) this.showMauvinLocation();
         // Developer helper tool
         if (this.$data.showMagnetProxy) {
-          window.addEventListener('resize', () => this.updateMangetProxy(this.$data.elms));
+          window.addEventListener('resize', () => this.updateMagnetProxy(this.$data.elms));
           this.createMagnetProxy(this.$data.elms);
         }
       }
-
       // Start Cursor
       this.startMauvin();
-
       //introduction
       this.sayHello();
     }
@@ -390,7 +423,7 @@ export default {
       elm.removeEventListener('mouseout', this.onMouseLeave);
       elm.removeEventListener('mouseover', this.onMouseEnter);
     });
-    if (this.$data.showMagnetProxy) window.removeEventListener('resize', this.updateMangetProxy(this.$data.elms));
+    if (this.$data.showMagnetProxy) window.removeEventListener('resize', this.updateMagnetProxy(this.$data.elms));
     // Remove RAF
     cancelAnimationFrame(this.$data.raf);
   }
@@ -409,7 +442,6 @@ body {
     pointer-events: none;
     top: 0;
     left: 0;
-
     // Js Vue Classes
     &.cursor-hover {
         height: $size + 10;
@@ -492,7 +524,8 @@ body {
     top: 0;
     left: 0;
     padding: 5px 10px;
-    background-color: var(--color);
+    background-color: red;
+    color: white;
     pointer-events: none;
     font-size: 16px;
 }

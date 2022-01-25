@@ -1,7 +1,7 @@
 <template>
 <div id="app" data-scroll-container :class="[{'touchevents': touchevents, 'no-touchevents': !touchevents }, `${browserClass}`]">
-  <!-- <Nav /> -->
-  <CursorDot />
+  <Nav />
+  <Mauvin />
   <nuxt />
 </div>
 </template>
@@ -9,13 +9,12 @@
     <script>
     // import touchevents from '~/mixins/touchevents';
     import Nav from '~/components/Nav';
-    import CursorDot from '~/components/CursorDot';
+    import Mauvin from '~/components/Mauvin';
 
     export default {
       components: {
         Nav,
-        CursorDot,
-
+        Mauvin,
       },
       mixins: [],
       data() {
