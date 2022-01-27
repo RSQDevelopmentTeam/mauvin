@@ -1,19 +1,17 @@
 <template>
-<div v-if="ready" id="nav">
-  <div class="grid grid-cols-2 items-center gap-8 lg:gap-32 mx-8 lg:mx-64 mb-64 py-64 lg:py-64">
-    <div id="logo"></div>
-    <div class="flex justify-end">
-      <ul class="flex">
-        <li class="mx-8">
-          <a href="#about">Github</a>
-        </li>
-        <li class="mx-8">
-          <a href="#instruction">Contact Us</a>
-        </li>
-      </ul>
-    </div>
+<nav v-if="ready" id="nav">
+  <div id="logo"></div>
+  <div class="flex justify-end">
+    <ul class="flex">
+      <li class="mx-8">
+        <a href="#about">Github</a>
+      </li>
+      <li class="mx-8">
+        <a href="#instruction">Contact Us</a>
+      </li>
+    </ul>
   </div>
-</div>
+</nav>
 </template>
 
 <script>
@@ -52,7 +50,15 @@ a {
 
 #nav {
   position: absolute;
+  display: flex;
+  left: 0;
+  max-width: 290px;
+  height: 74px;
   width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 32px;
 
   &.nav-enter-active {
     opacity: 0;

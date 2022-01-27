@@ -16,13 +16,26 @@ $yellow: #ffdd00;
   height: 500px;
   overflow: hidden;
   z-index: -1;
-will-change: transform;
+ will-change: transform;
+
+&:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  // background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(9,121,16,0) 0%, rgba(0,0,0,1) 100%);
+  z-index: 33;
+}
   .inside {
     background-color:$yellow;
     background-image:url('/img/grid.svg');
     background-repeat: repeat;
-    height: 220vh;
-    width: 220vw;
+    background-size: 1200px;
+    height: 20000px;
+    width: 20000px;
     margin-left: -50vw;
     margin-top: -50vh;
   }
@@ -88,6 +101,7 @@ will-change: transform;
 
     100% { transform: translate(0px, -2px) rotate(-1deg); }
   }
+
   #margin-logo {
     background-image: url('/img/logo.svg');
     width: 100%;
@@ -99,154 +113,171 @@ will-change: transform;
     margin-top: 30px;
   }
 
+  #settings-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    max-width: 300px;
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 16px 32px;
+    background-color:$yellow;
+    background-image:url('/img/cover-texture.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    box-shadow: 2px 0px 8px #00000021;
+    z-index: 3;
+
+    h5 {
+      font-size: 18px;
+      line-height: 24px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .setting {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      &.data-container {
+        width: 100%;
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 2px 4px 0px #e0c204;
+      }
+
+      &.rangeSlider {
+        max-width: 180px;
+          h5 {
+            // margin-top: 20px;
+          }
+      }
+    }
+
+    .veeno {
+      margin-top: 15px;
+    }
+    .num {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      bottom: 30px;
+      text-align: center;
+    }
+
+    .color-dot-container {
+      display: flex;
+      justify-content: center;
+      max-width: 300px;
+      margin: 0 auto;
+      padding: 8px 5px;
+      border-radius: 35px;
+      background: $gray;
+      box-shadow: 2px 3px #e8c80e;
+
+      .color-dot {
+        width: 20px;
+        height: 20px;
+        margin: 0 5px;
+        background-color: red;
+        border-radius: 50%;
+        &.active {
+          border: 2px solid $black;
+        }
+      }
+    }
+
+    .toggle-container {
+      position: relative;
+      display: flex;
+      height: 40px;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+      background: $gray;
+      box-shadow: 2px 3px #e8c80e;
+      border-radius: 999px;
+      transition: all 300ms ease;
+      cursor: pointer;
+      $size: 5px;
+      $sizeHalf: math.div($size,2);
+
+      .toggle-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        height: 100%;
+        position: relative;
+
+      }
+
+      .mauvin-toggle-dot {
+        // left: 0px;
+      }
+
+      .mauvin-toggle-stroke,
+      .mauvin-toggle-dot {
+        position: absolute;
+        border-radius: 50%;
+        height: 25px;
+        width: 25px;
+
+        .dot {
+          position: absolute;
+          width: $size;
+          height: $size;
+          background: $red;
+          z-index: 2;
+          border-radius: 50%;
+          top: calc(50% - $sizeHalf);
+          left: calc(50% - $sizeHalf);
+        }
+      }
+
+      .mauvin-toggle-stroke {
+        border: 1px dashed $black;
+      }
+
+      .toggle__handle {
+        position: absolute;
+        height: 34px;
+        width: 50%;
+        top: 50%;
+        left: 0px;
+        transform: translateY(-50%);
+        background: white;
+        border-radius: 999px;
+        transition: all 300ms ease;
+        box-shadow: 0px 0px 5px 1px #b9b9b9b3
+      }
+
+      &.is-on {
+        background: #f0f0f2;
+        @include transition;
+        .toggle__handle {
+          left: calc(50% - 2px);
+          @include transition;
+        }
+      }
+    }
+  }
+
   #intro-section {
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 100vh;
     width: 100vw;
-
-    #settings-container {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      align-items: center;
-      padding: 16px;
-      background-color:$yellow;
-      background-image:url('/img/cover-texture.png');
-      background-repeat: no-repeat;
-      box-shadow: 2px 0px 8px #00000021;
-      z-index: 3;
-
-      h5 {
-        font-size: 18px;
-        line-height: 24px;
-        margin-bottom: 16px;
-        text-align: center;
-      }
-
-      .setting {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-
-        &.rangeSlider {
-          // margin-bottom: 15px;
-            h5 {
-              // margin-top: 20px;
-            }
-        }
-      }
-
-      .veeno {
-        margin-top: 15px;
-      }
-      .num {
-        position: absolute;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        bottom: 30px;
-        text-align: center;
-      }
-
-      .color-dot-container {
-        display: flex;
-        justify-content: center;
-        max-width: 300px;
-        margin: 0 auto;
-        padding: 8px 5px;
-        border-radius: 35px;
-        background: $gray;
-        box-shadow: 2px 3px #e8c80e;
-
-        .color-dot {
-          width: 20px;
-          height: 20px;
-          margin: 0 5px;
-          background-color: red;
-          border-radius: 50%;
-          &.active {
-            border: 2px solid $black;
-          }
-        }
-      }
-
-      .toggle-container {
-        position: relative;
-        display: flex;
-        height: 40px;
-        width: 100%;
-        max-width: 300px;
-        margin: 0 auto;
-        background: $gray;
-        box-shadow: 2px 3px #e8c80e;
-        border-radius: 999px;
-        transition: all 300ms ease;
-        cursor: pointer;
-        $size: 5px;
-        $sizeHalf: math.div($size,2);
-
-        .toggle-section {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 50%;
-          height: 100%;
-        }
-
-        .mauvin-toggle-stroke,
-        .mauvin-toggle-dot {
-          position: absolute;
-          border-radius: 50%;
-          height: 25px;
-          width: 25px;
-
-          .dot {
-            position: absolute;
-            width: $size;
-            height: $size;
-            background: $red;
-            z-index: 2;
-            border-radius: 50%;
-            top: calc(50% - $sizeHalf);
-            left: calc(50% - $sizeHalf);
-          }
-        }
-
-        .mauvin-toggle-stroke {
-          border: 1px dashed $black;
-        }
-
-        .toggle__handle {
-          position: absolute;
-          height: 34px;
-          width: 50%;
-          top: 50%;
-          left: 4px;
-          transform: translateY(-50%);
-          background: white;
-          border-radius: 999px;
-          transition: all 300ms ease;
-          box-shadow: 0px 0px 5px 1px #b9b9b9b3
-        }
-
-        &.is-on {
-          background: #f0f0f2;
-          @include transition;
-          .toggle__handle {
-            left: calc(50% - 5px);
-            @include transition;
-          }
-        }
-      }
-    }
-
-
 
     #mauvin-hold {
       position: relative;
@@ -256,7 +287,7 @@ will-change: transform;
         height: 280px;
         width: 280px;
         margin: 0 auto;
-        background-image: url('/img/full-mauvin.svg');
+        // background-image: url('/img/full-mauvin.svg');
         background-repeat: no-repeat;
         will-change: transform;
         animation: mauvinHover var(--mauvinSpeed) infinite ease-in-out;
@@ -322,7 +353,6 @@ will-change: transform;
 
         p {
         }
-
     }
   }
 
@@ -348,19 +378,20 @@ will-change: transform;
 }
 
 #data {
-  padding: 30px;
-  background-color: $yellow;
   width: 100%;
-  max-width: 300px;
-  border-radius: 12px;
+
   li {
     display: block;
-
+    > span {
+      font-weight: bold;
+    }
   }
   .data {
+    position: absolute;
     margin-left: 10px;
   }
 }
+
 
 #code-section {
   display: flex;

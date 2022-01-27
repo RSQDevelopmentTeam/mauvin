@@ -51,3 +51,18 @@
   }
 
 }
+
+.noUi-handle {
+    background-color: #ffdd00!important;
+ box-shadow: 2px 2px 13px 0px #0c0c0c4f!important;
+    border: none!important;
+
+    &:before,
+    &:after {
+          background: #000000!important;
+      // display: none!important;
+    }
+    &:after {
+      left: 20px!important;
+    }
+}

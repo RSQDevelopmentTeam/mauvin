@@ -1,10 +1,17 @@
 export const state = () => ({
   dotCursor: true,
   mauvin: {
+    moving: false,
     speed: 0.2,
-    color: 'blue',
+    settlingDown: 250,
+    color: 'red',
     size: 10,
+    defualtSize: 30,
     borderRaidus: '50%',
+    direction: {
+      y: '',
+      x: ''
+    }
   },
   strokeCursor: false,
   stroke: {
@@ -18,14 +25,26 @@ export const state = () => ({
 });
 
 export const mutations = {
+  cursorMoving (state, val) {
+    state.mauvin.moving = val;
+  },
+  cursorSpeed (state, val) {
+    state.mauvin.speed = val;
+  },
+  cursorSettlingDown (state, val) {
+    state.mauvin.settlingDown = val;
+  },
   cursorColor (state, val) {
     state.mauvin.color = val;
   },
   cursorSize (state, val) {
     state.mauvin.size = val;
   },
-  speed (state, val) {
-    state.speed = val;
+  cursorDirectionX (state, val) {
+    state.mauvin.direction.x = val;
+  },
+  cursorDirectionY (state, val) {
+    state.mauvin.direction.y = val;
   },
   strokeCursor (state, val) {
     state.strokeCursor = !state.strokeCursor;
