@@ -1,6 +1,35 @@
 <template>
 <div id="home-page" :class="introClasses">
   <section id="intro-section" data-scroll-section>
+
+    <div id="data">
+      <ul>
+        <li>
+          <span>Mauvins Position</span>X: <span class="data">{{this.$store.state.mouseStatus.coords[0]}}</span>
+        </li>
+        <li>
+          <span>Mauvins Position</span>Y: <span class="data">{{this.$store.state.mouseStatus.coords[1]}}</span>
+        </li>
+        <li>
+          <span>Cursor-Size</span>: <span class="data">{{mauvinsSize}}</span>
+        </li>
+        <li>
+          <span>Cursor Color</span>: <span class="data">{{this.$store.state.mouseSettings.mauvin.color}}</span>
+        </li>
+        <li>
+          <span>Cursor-Stroke</span>: <span class="data">{{mauvinsStrokeSize}}</span>
+        </li>
+        <li>
+          <span>Cursor Color</span>: <span class="data">{{this.$store.state.mouseSettings.stroke.borderColor}}</span>
+        </li>
+        <li>
+          <span>Turn Stroke on </span>: <span class="data">{{this.$store.state.mouseSettings.strokeCursor}}</span>
+        </li>
+
+      </ul>
+
+    </div>
+
     <div id="settings-container">
       <div class="setting rangeSlider">
         <h5>Cursor Size</h5>
@@ -57,10 +86,10 @@
       <div id="moving-action">
         <div id="mauvin-person" ref="mauvin-person">
           <div id="mauvin-left" data-mauvin-hover>
-            <div id="mauvin-eye" ref="mauvin-left-eye" data-magnet></div>
+            <div id="mauvin-eye" ref="mauvin-left-eye"></div>
           </div>
           <div id="mauvin-right" data-mauvin-hover>
-            <div id="mauvin-eye" ref="mauvin-right-eye" data-magnet></div>
+            <div id="mauvin-eye" ref="mauvin-right-eye"></div>
           </div>
         </div>
       </div>
@@ -141,12 +170,19 @@ export default {
     };
   },
   computed: {},
-  watch: {},
+  watch: {
+    mauvinsSize(val) {
+      this.$store.commit('mouseSettings/cursorSize', val);
+    },
+    mauvinsStrokeSize(val) {
+      this.$store.commit('mouseSettings/strokeCursorSize', val);
+    },
+  },
   destroyed: function() {},
   mounted: function() {
-    const toggle = document.querySelectorAll('.toggle');
-    toggle.forEach((elm, i) => {
-      elm.addEventListener('click', () => elm.classList.toggle('is-on'));
+    document.querySelector('.toggle').addEventListener('click', () => {
+      elm.classList.toggle('is-on');
+      this.$store.commit('mouseSettings/strokeCursor', true);
     });
 
     this.animateIn(this.finishedAnimating);

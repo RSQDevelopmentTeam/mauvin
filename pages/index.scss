@@ -16,15 +16,15 @@ $yellow: #ffdd00;
   height: 500px;
   overflow: hidden;
   z-index: -1;
-
+will-change: transform;
   .inside {
     background-color:$yellow;
     background-image:url('/img/grid.svg');
     background-repeat: repeat;
-    height: 1000vh;
-    width: 1000vw;
-    margin-left: -100vw;
-    margin-top: -100vh;
+    height: 220vh;
+    width: 220vw;
+    margin-left: -50vw;
+    margin-top: -50vh;
   }
 
 }
@@ -123,7 +123,7 @@ $yellow: #ffdd00;
       z-index: 3;
 
       h5 {
-        font-size: 24px;
+        font-size: 18px;
         line-height: 24px;
         margin-bottom: 16px;
         text-align: center;
@@ -135,15 +135,15 @@ $yellow: #ffdd00;
         flex-direction: column;
 
         &.rangeSlider {
-          margin-bottom: 15px;
+          // margin-bottom: 15px;
             h5 {
-              margin-top: 20px;
+              // margin-top: 20px;
             }
         }
       }
 
       .veeno {
-        margin-top: 25px;
+        margin-top: 15px;
       }
       .num {
         position: absolute;
@@ -251,7 +251,6 @@ $yellow: #ffdd00;
     #mauvin-hold {
       position: relative;
 
-
       #mauvin-person {
         position: relative;
         height: 280px;
@@ -312,7 +311,7 @@ $yellow: #ffdd00;
     #mauvins-content {
       position: relative;
       max-width: 900px;
-      margin: 72px auto 0;
+      margin: 0px auto 0;
 
         h1 {
         }
@@ -348,7 +347,20 @@ $yellow: #ffdd00;
   }
 }
 
+#data {
+  padding: 30px;
+  background-color: $yellow;
+  width: 100%;
+  max-width: 300px;
+  border-radius: 12px;
+  li {
+    display: block;
 
+  }
+  .data {
+    margin-left: 10px;
+  }
+}
 
 #code-section {
   display: flex;
