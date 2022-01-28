@@ -379,7 +379,6 @@ export default {
           });
         }
         if (this.$data.mauvin.direction.y === 'up') {
-          console.log('d')
           TweenMax.to('#mauvin-person', 2, {
             y: -50,
           });
