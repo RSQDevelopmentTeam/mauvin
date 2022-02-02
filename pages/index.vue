@@ -1,116 +1,120 @@
 <template>
-<div id="home-page" :class="introClasses">
-  <div id="settings-container">
-
-    <div class="setting rangeSlider">
-      <h5>Cursor Size</h5>
-      <veeno v-model="mauvinsSize" :handles="2" :range="{ 'min': 1, 'max': 5 }"></veeno>
-      <div class="num">{{mauvinsSize}}</div>
-    </div>
-    <div class="setting">
-      <h5>Cursor Color</h5>
-      <div class="color-dot-container mauvin">
-        <div :style="{backgroundColor: 'red'}" data-color="red" class="color-dot"></div>
-        <div :style="{backgroundColor: 'green'}" data-color="green" class="color-dot"></div>
-        <div :style="{backgroundColor: '#8f008d'}" data-color="#8f008d" class="color-dot"></div>
-        <div :style="{backgroundColor: '#00728f'}" data-color="#00728f" class="color-dot"></div>
-      </div>
-    </div>
-    <div class="setting">
-      <h5>Stroke Border</h5>
-      <div class="toggle-container toggle">
-        <div class="toggle__handle"></div>
-        <div class="toggle-section">
-          <div class="mauvin-toggle-dot">
-            <div class="dot"></div>
-          </div>
-        </div>
-        <div class="toggle-section">
-          <div class="mauvin-toggle-stroke">
-            <div class="dot"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="setting">
-      <h5>Stroke Border Color</h5>
-      <div class="color-dot-container">
-        <div :style="{backgroundColor: 'red'}" data-color="red" class="color-dot"></div>
-        <div :style="{backgroundColor: 'green'}" data-color="green" class="color-dot"></div>
-        <div :style="{backgroundColor: '#8f008d'}" data-color="#8f008d" class="color-dot"></div>
-        <div :style="{backgroundColor: '#00728f'}" data-color="#800728f" class="color-dot"></div>
-      </div>
-    </div>
-    <div class="setting rangeSlider">
-      <h5>Cursor Sroke Size</h5>
-      <veeno v-model="mauvinsStrokeSize" :handles="20" :range="{ 'min': 0, 'max': 35 }">
-      </veeno>
-      <div class="num">{{mauvinsStrokeSize}}</div>
-    </div>
-    <div class="setting data-container">
-      <div id="data">
-        <h4>Mauvin's Data</h4>
-        <ul>
-          <li>
-            <span>Position X</span>: <span class="data">{{this.$store.state.mouseStatus.coords[0]}}</span>
-          </li>
-          <li>
-            <span>Position Y</span>: <span class="data">{{this.$store.state.mouseStatus.coords[1]}}</span>
-          </li>
-          <li>
-            <span>Direction X</span>: <span class="data">{{this.$store.state.mouseSettings.mauvin.direction.x}}</span>
-          </li>
-          <li>
-            <span>Direction Y</span>: <span class="data">{{this.$store.state.mouseSettings.mauvin.direction.y}}</span>
-          </li>
-          <li>
-            <span>Size</span>: <span class="data">{{mauvinsSize}}</span>
-          </li>
-          <li>
-            <span>Color</span>: <span class="data">{{this.$store.state.mouseSettings.mauvin.color}}</span>
-          </li>
-        </ul>
-      </div>
-      <div id="data">
-        <h4>Stroke</h4>
-        <ul>
-          <li>
-            <span>Turn Stroke on </span>: <span class="data">{{this.$store.state.mouseSettings.strokeCursor}}</span>
-          </li>
-          <li>
-            <span>Stroke Size</span>: <span class="data">{{mauvinsStrokeSize}}</span>
-          </li>
-          <li>
-            <span>Stroke Color</span>: <span class="data">{{this.$store.state.mouseSettings.stroke.borderColor}}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+<div id="home-page" data-scroll-container :class="introClasses">
   <section id="intro-section" data-scroll-section>
+    <div id="grid-container">
+      <div id="grid"></div>
+    </div>
 
-    <div id="mauvin-hold">
-      <div id="grid">
-        <div class="inside"></div>
+    <div id="settings-container">
+      <div id="margin-logo"></div>
+      <div class="setting data-container">
+        <div id="data">
+          <h4>Mauvin's Global Data</h4>
+          <ul>
+            <li>
+              <span>Position X:</span> <span class="data">{{this.$store.state.mouseSettings.coords[0]}}</span>
+            </li>
+            <li>
+              <span>Position Y:</span> <span class="data">{{this.$store.state.mouseSettings.coords[1]}}</span>
+            </li>
+            <li>
+              <span>Direction X:</span> <span class="data">{{this.$store.state.mouseSettings.mauvin.direction.x}}</span>
+            </li>
+            <li>
+              <span>Direction Y:</span> <span class="data">{{this.$store.state.mouseSettings.mauvin.direction.y}}</span>
+            </li>
+
+            <li>
+              <span>Settling Down:</span> <span class="data">{{this.$store.state.mouseSettings.mauvin.settlingDown}}</span>
+            </li>
+            <li>
+              <span>Moving:</span> <span class="data">{{this.$store.state.mouseSettings.mauvin.moving}}</span>
+            </li>
+            <li>
+              <span>Speed:</span> <span class="data">{{this.$store.state.mouseSettings.mauvin.speed}}</span>
+            </li>
+            <li>
+              <span>Size: </span><span class="data">{{mauvinsSize}}</span>
+            </li>
+            <li>
+              <span>Color: </span><span class="data">{{this.$store.state.mouseSettings.mauvin.color}}</span>
+            </li>
+          </ul>
+        </div>
+        <div id="data">
+          <h4>Stroke</h4>
+          <ul>
+            <li>
+              <span>Turn Stroke on: </span> <span class="data">{{this.$store.state.mouseSettings.strokeCursor}}</span>
+            </li>
+            <li>
+              <span>Stroke Size:</span> <span class="data">{{mauvinsStrokeSize}}</span>
+            </li>
+            <li>
+              <span>Stroke Color:</span> <span class="data">{{this.$store.state.mouseSettings.stroke.borderColor}}</span>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div id="moving-action" :style="`transform: scale(${(mauvinsSize / 5) * 1.2});`">
-        <div id="mauvin-person" ref="mauvin-person">
-          <mauvinBody />
-          <div id="mauvin-left">
-            <div id="mauvin-eye" ref="mauvin-left-eye"></div>
+      <div class="setting rangeSlider">
+        <h5>Cursor Size</h5>
+        <veeno v-model="mauvinsSize" :handles="2" :range="{ 'min': 1, 'max': 5 }"></veeno>
+        <div class="num">{{mauvinsSize}}</div>
+      </div>
+      <div class="setting">
+        <h5>Cursor Color</h5>
+        <div class="color-dot-container mauvin">
+          <div :style="{backgroundColor: 'red'}" data-color="red" class="color-dot"></div>
+          <div :style="{backgroundColor: 'green'}" data-color="green" class="color-dot"></div>
+          <div :style="{backgroundColor: '#8f008d'}" data-color="#8f008d" class="color-dot"></div>
+          <div :style="{backgroundColor: '#00728f'}" data-color="#00728f" class="color-dot"></div>
+        </div>
+      </div>
+      <div class="setting">
+        <h5>Stroke Border</h5>
+        <div class="toggle-container toggle js-toggle-stroke">
+          <div class="toggle__handle"></div>
+          <div class="toggle-section">
+            <div class="mauvin-toggle-dot">
+              <div class="dot"></div>
+            </div>
           </div>
-          <div id="mauvin-right">
-            <div id="mauvin-eye" ref="mauvin-right-eye"></div>
+          <div class="toggle-section">
+            <div class="mauvin-toggle-stroke">
+              <div class="dot"></div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- <div id="mauvins-shadow"></div> -->
+      <div class="setting">
+        <h5>Stroke Border Color</h5>
+        <div class="color-dot-container">
+          <div :style="{backgroundColor: 'red'}" data-color="red" class="color-dot"></div>
+          <div :style="{backgroundColor: 'green'}" data-color="green" class="color-dot"></div>
+          <div :style="{backgroundColor: '#8f008d'}" data-color="#8f008d" class="color-dot"></div>
+          <div :style="{backgroundColor: '#00728f'}" data-color="#800728f" class="color-dot"></div>
+        </div>
+      </div>
+      <div class="setting rangeSlider">
+        <h5>Cursor Sroke Size</h5>
+        <veeno v-model="mauvinsStrokeSize" :handles="20" :range="{ 'min': 0, 'max': 35 }">
+        </veeno>
+        <div class="num">{{mauvinsStrokeSize}}</div>
+      </div>
+
+    </div>
+    <div id="moving-action" :style="`transform: scale(${(mauvinsSize / 5) * 1.2});`">
+      <div id="mauvin-person" ref="mauvin-person">
+        <mauvinBody />
+        <div id="mauvin-left">
+          <div id="mauvin-eye" ref="mauvin-left-eye"></div>
+        </div>
+        <div id="mauvin-right">
+          <div id="mauvin-eye" ref="mauvin-right-eye"></div>
+        </div>
+      </div>
     </div>
 
-    <div id="mauvins-content" class="text-center">
-      <div id="margin-logo"></div>
-      <h2>Cursor Component For Vue</h2>
-    </div>
   </section>
   <section id="code-section" data-scroll-section>
     <div id="mauvins-content" class="text-center">
@@ -177,30 +181,33 @@ export default {
   computed: {},
   watch: {
     mauvinsSize(val) {
-      this.$store.commit('mouseSettings/cursorSize', val);
+      this.$store.commit('mouseSettings/character', val);
     },
     mauvinsStrokeSize(val) {
       this.$store.commit('mouseSettings/strokeCursorSize', val);
     },
-    mauvinsStrokeSize(val) {
-      this.$store.commit('mouseSettings/strokeCursorSize', val);
-    },
-
   },
   destroyed: function() {},
   mounted: function() {
-    document.querySelector('.toggle').addEventListener('click', () => {
-      document.querySelector('.toggle').classList.toggle('is-on');
-      this.$store.commit('mouseSettings/strokeCursor', true);
+    document.querySelector('.js-toggle-stroke').addEventListener('click', () => {
+      document.querySelector('.js-toggle-stroke').classList.toggle('is-on');
+      // this.$store.commit('mouseSt/strokeCursor', true);
     });
+
+    // document.querySelector('js-toggle-stroke').addEventListener('click', () => {
+    //   document.querySelector('js-toggle-stroke').classList.toggle('is-on');
+    //   this.$store.commit('mouseSettings/strokeCursor', true);
+    // });
+
+
 
     document.querySelector('.color-dot-container.mauvin').addEventListener('click', (e) => {
       if (typeof e.target.dataset.color !== 'undefined') {
         this.$store.commit('mouseSettings/cursorColor', e.target.dataset.color);
+        document.querySelector('#mauvin-color').style.setProperty('--color', e.target.dataset.color);
+
       }
     })
-
-
 
     this.animateIn(this.finishedAnimating);
   },

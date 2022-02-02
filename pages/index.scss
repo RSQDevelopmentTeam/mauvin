@@ -1,5 +1,4 @@
-// @import '@/assets/scss/_laconic';
-@use "sass:math";
+@import '@/assets/scss/_laconic';
 $black: #000;
 $red: red;
 $gray: #f0f0f2;
@@ -43,6 +42,9 @@ $yellow: #ffdd00;
   --ballColor: #fff;
   --wallColor: #555;
   --floorColor: #666;
+  $mauvinLight: 90%;
+  --bgx: 0;
+  --bgy: 0;
 
   h1 {
     font-size: 50px;
@@ -59,30 +61,6 @@ $yellow: #ffdd00;
     font-size: 32px;
     line-height: 40px;
   }
-  .move {
-    animation: shake2 1.3s once;
-  }
-  @keyframes shake2 {
-    0% { transform: translate(13px, 1px) rotate(0deg); }
-
-    100% { transform: translate(0px, -2px) rotate(-1deg); }
-  }
-
-  #margin-logo {
-    background-image: url('/img/logo.svg');
-    width: 100%;
-    max-width: 460px;
-    height: 150px;
-    margin: 0 auto;
-    background-repeat: no-repeat;
-    background-size: contain;
-    margin-top: 30px;
-  }
-
-  .setting.data-container {
-    ul {
-    }
-  }
 
   #settings-container {
     position: fixed;
@@ -94,31 +72,44 @@ $yellow: #ffdd00;
 
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     padding: 16px 32px;
-    background-color:$yellow;
+    // background-color:$yellow;
+    background: #e0e0e0;
     background-image:url('/img/cover-texture.png');
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
-    box-shadow: 2px 0px 8px #00000021;
+    box-shadow: 3px 3px 0px rgb(0 0 0 / 10%);
     z-index: 3;
+
+    background-position: --bgx --bgy;
+
+    #margin-logo {
+      background-image: url('/img/logo.svg');
+      width: 100%;
+      max-width: 460px;
+      height: 6%;
+      min-height: 35px;
+      margin: 0 auto 10px auto;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+    }
 
     h5 {
       font-size: 18px;
       line-height: 24px;
       margin-bottom: 16px;
       text-align: center;
-font-family: 'Luckiest Guy', cursive;
-
+      font-family: 'Luckiest Guy', cursive;
     }
 
     h4 {
       font-size: 18px;
       line-height: 24px;
       text-align: center;
-font-family: 'Luckiest Guy', cursive;
-
+      font-family: 'Luckiest Guy', cursive;
     }
 
     .setting {
@@ -131,8 +122,8 @@ font-family: 'Luckiest Guy', cursive;
         width: 100%;
         background: white;
         border-radius: 20px;
-        padding: 20px;
-        box-shadow: 2px 4px 0px #e0c204;
+        padding: 10px;
+       box-shadow: 3px 3px 0px rgb(0 0 0 / 10%);
       }
 
       &.rangeSlider {
@@ -146,6 +137,7 @@ font-family: 'Luckiest Guy', cursive;
     .veeno {
       margin-top: 15px;
     }
+
     .num {
       position: absolute;
       left: 0;
@@ -163,7 +155,7 @@ font-family: 'Luckiest Guy', cursive;
       padding: 8px 5px;
       border-radius: 35px;
       background: $gray;
-      box-shadow: 2px 3px #e8c80e;
+      box-shadow: 3px 3px 0px rgb(0 0 0 / 10%);
 
       .color-dot {
         width: 20px;
@@ -184,17 +176,17 @@ font-family: 'Luckiest Guy', cursive;
     .toggle-container {
       position: relative;
       display: flex;
-      height: 40px;
+      height: 25px;
       width: 100%;
-      max-width: 300px;
+      max-width: 200px;
       margin: 0 auto;
       background: $gray;
-      box-shadow: 2px 3px #e8c80e;
+      box-shadow: 3px 3px 0px rgb(0 0 0 / 10%);
       border-radius: 999px;
       transition: all 300ms ease;
       cursor: pointer;
       $size: 5px;
-      $sizeHalf: math.div($size,2);
+      $sizeHalf: 2.5px;
 
       .toggle-section {
         display: flex;
@@ -213,9 +205,9 @@ font-family: 'Luckiest Guy', cursive;
       .mauvin-toggle-stroke,
       .mauvin-toggle-dot {
         position: absolute;
-        border-radius: 50%;
         height: 25px;
         width: 25px;
+        border-radius: 50%;
 
         .dot {
           position: absolute;
@@ -235,14 +227,13 @@ font-family: 'Luckiest Guy', cursive;
 
       .toggle__handle {
         position: absolute;
-        height: 34px;
+        height: 100%;
         width: 50%;
         top: 50%;
         left: 0px;
         transform: translateY(-50%);
         background: white;
         border-radius: 999px;
-        transition: all 300ms ease;
         box-shadow: 0px 0px 5px 1px #b9b9b9b3
       }
 
@@ -258,125 +249,130 @@ font-family: 'Luckiest Guy', cursive;
   }
 
   #intro-section {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 100vh;
-    width: 100vw;
+    width: calc(100vw );
+    overflow: hidden;
+    background-color: $yellow;
 
-    #mauvin-hold {
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: calc(100% - 300px);
+      margin: auto;
+      // background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(9,121,16,0) 0%, rgba(0,0,0,1) 100%);
+      z-index:1;
+      // background: radial-gradient(circle, rgb(189 190 172 / 0%) 10%, black 100%);
+      background: radial-gradient(circle, rgb(0 0 0 / 0%) 6%, black $mauvinLight);
+    }
+
+    #grid-container {
+      height: 100vh;
+      width: calc(100% - 300px);
+      overflow: hidden;
+      left: 0;
+      top: 0;
+    }
+
+    #grid {
+      position: absolute;
+      top: 0px;
+      left: 0;
+      right: 0;
+      height: 100%;
+      z-index: -1;
+      will-change: transform;
+      height: 100vh;
+      width: 100vw;
+      background-color: #0a0a0a;
+
+      background-image:url('/img/grid.svg');
+      background-repeat: repeat;
+      background-size: 1200px;
+      will-change: transform;
+      background-position: var(--bgy) var(--bgx) ;
+    }
+
+    #moving-action {
+      position: absolute;
+      margin: 0 auto;
+      display: flex;
+      align-content: center;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: calc(100vw - 300px);
+      * {
+        will-change: transform;
+      }
+
+    }
+    #mauvin-person {
       position: relative;
-      height: 500px;
+      width: calc(100vw - (750px * 2));
+      min-width: 400px;
+      max-width: 400px;
+      margin: 0 auto;
+      // background-image: url('/img/full-mauvin.svg');
+      background-repeat: no-repeat;
+      will-change: transform;
+      // animation: mauvinHover var(--mauvinSpeed) infinite ease-in-out;
 
-      #grid {
-        position: absolute;
-        top: 0px;
-        left: 0;
-        right: 0;
-        max-width: 800px;
-        margin: 0 auto;
-        height: 100%;
-        overflow: hidden;
-        z-index: -1;
-        will-change: transform;
-
-        &:before {
-          content: '';
-          position: absolute;
-          left: 0;
-          right: 0;
-          height: 100%;
-          width: 100%;
-          margin: auto;
-          // background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(9,121,16,0) 0%, rgba(0,0,0,1) 100%);
-          z-index: 33;
-        }
-
-        .inside {
-          background-color:$yellow;
-          background-image:url('/img/grid.svg');
-          background-repeat: repeat;
-          background-size: 1200px;
-          height: 20000px;
-          width: 20000px;
-          margin-left: -50vw;
-          margin-top: -50vh;
-        }
-
+      @keyframes mauvinHover {
+        0%, 10%, 100% { bottom: 0.75em; }
+        50% { bottom: 1.5em; }
       }
 
-      #moving-action {
+      #mauvin-left,
+      #mauvin-right {
         position: absolute;
-        margin: 0 auto;
-        left: 0;
-        right: 0;
-        display: flex;
-        align-content: center;
-        justify-content: center;
         align-items: center;
-        height: 100%;
-      }
-      #mauvin-person {
-        position: relative;
-        height: 280px;
-        width: 280px;
-        margin: 0 auto;
-        // background-image: url('/img/full-mauvin.svg');
-        background-repeat: no-repeat;
+        justify-content: center;
         will-change: transform;
-        animation: mauvinHover var(--mauvinSpeed) infinite ease-in-out;
 
-        @keyframes mauvinHover {
-          0%, 10%, 100% { bottom: 0.75em; }
-          50% { bottom: 1.5em; }
-        }
+      }
+      #mauvin-left {
+        top: 15%;
+        left: 15%;
+        display: flex;
+        height: 39%;
+        width: 46%;
 
-        #mauvin-left,
-        #mauvin-right {
+        #mauvin-eye {
           position: absolute;
-          align-items: center;
-          justify-content: center;
-          will-change: transform;
-
+          height: 33%;
+          width: 33%;
+          background-image: url('/img/left-eye.svg');
+          background-repeat: no-repeat;
         }
-        #mauvin-left {
-          top: 15%;
-          left: 12%;
-          display: flex;
-          height: 39%;
-          width: 46%;
+      }
 
-          #mauvin-eye {
-            position: absolute;
-            height: 20px;
-            width: 20px;
-            background-image: url('/img/left-eye.svg');
-            background-repeat: no-repeat;
-          }
-        }
+      #mauvin-right {
+        position: absolute;
+        top: 21%;
+        right: 4%;
+        height: 34%;
+        width: 34%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        will-change: transform;
 
-        #mauvin-right {
+        #mauvin-eye {
           position: absolute;
-          top: 21%;
-          right: 8%;
-          height: 34%;
-          width: 34%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          will-change: transform;
-
-          #mauvin-eye {
-            position: absolute;
-            height: 20px;
-            width: 20px;
-            background-image: url('/img/right-eye.svg');
-            background-repeat: no-repeat;
-          }
+          height: 27%;
+          width: 27%;
+          background-image: url('/img/right-eye.svg');
+          background-repeat: no-repeat;
         }
       }
     }
-
     #mauvins-content {
       position: relative;
       max-width: 900px;
@@ -392,25 +388,31 @@ font-family: 'Luckiest Guy', cursive;
       p {
       }
     }
-  }
 
-}
+    #data {
+      width: 100%;
+      margin: 5px 0;
 
-#data {
-  width: 100%;
-  margin: 10px 0;
-
-  li {
-    display: block;
-    > span {
-      font-weight: bold;
+      li {
+        display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+        > span {
+          font-weight: bold;
+          font-size: rem(12);
+        }
+      }
+      .data {
+        // position: absolute;
+        margin-left: 10px;
+      }
     }
   }
-  .data {
-    position: absolute;
-    margin-left: 10px;
-  }
+
 }
+
 
 
 #code-section {
@@ -419,4 +421,5 @@ font-family: 'Luckiest Guy', cursive;
   justify-content: center;
   height: 100vh;
   width: 100vw;
-}
+  background-color: #040404;
+  }

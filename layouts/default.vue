@@ -1,5 +1,5 @@
 <template>
-<div id="app" data-scroll-container :class="[{'touchevents': touchevents, 'no-touchevents': !touchevents }, `${browserClass}`]">
+<div id="app" :class="[{'touchevents': touchevents, 'no-touchevents': !touchevents }, `${browserClass}`]">
   <Nav />
   <Mauvin />
   <nuxt />
