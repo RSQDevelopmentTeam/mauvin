@@ -20,15 +20,11 @@ export default {
   data() {
     return {
       coords: [-30, -30],
-      stopMovingActionTime: 250,
       elms: [],
       elmsData: [],
       magnetElms: [],
       showMagnetProxy: false,
       showCursorsProxyNum: false,
-      stroke: {
-
-      },
       magnet: {
         speed: 0.2,
       },
@@ -62,9 +58,9 @@ export default {
     getStrokeWidth() {
       return parseInt(this.$store.state.mouseSettings.stroke.borderWidth)
     },
-    mCoords() {
-      this.$store.commit('mouseSettings/updateCoords', [this.coords[0], this.coords[1]]);
-      return [this.coords[0], this.coords[1]];
+    coordinates() {
+      this.$store.commit('mouseSettings/updateCoords', [this.$store.state.mouseSettings.coords[0], this.$store.state.mouseSettings.coords[1]]);
+      return [this.$store.state.mouseSettings.coords[0], this.$store.state.mouseSettings.coords[1]];
     },
     activate() {
       return this.$store.state.mouseSettings.active;
@@ -80,11 +76,21 @@ export default {
     cursorImage() {
       return this.$store.state.mouseSettings.cursorImage;
     },
+    strokeCursor() {
+      return this.$store.state.mouseSettings.stroke.strokeCursor;
+
+    },
   },
   watch: {
+    strokeCursor(oldVal, newVal) {
+      this.settingMauvinsStrokeStyle();
+      return this.$store.state.mouseSettings.stroke.strokeCursor;
+
+    },
     elm() {},
     activate() {},
-    mCoords() {
+
+    coordinates() {
       this.$data.elmsData.forEach((elm, i, arr) => {
         /// Updates List of Elements object of data
         this.disperseMouseData(i, arr, elm.node);
@@ -98,16 +104,16 @@ export default {
     hypotenuse(elm) {
       let element = elm.getBoundingClientRect();
       let distance = {
-        x: (element.left + element.width / 2) - this.mCoords[0],
-        y: (element.top + element.height / 2) - this.mCoords[1]
+        x: (element.left + element.width / 2) - this.coordinates[0],
+        y: (element.top + element.height / 2) - this.coordinates[1]
       };
       return Math.sqrt(distance.x * distance.x + distance.y * distance.y);
     },
     angle(elm) {
       let element = elm.getBoundingClientRect();
       let distance = {
-        x: (element.left + element.width / 2) - this.mCoords[0],
-        y: (element.top + element.height / 2) - this.mCoords[1]
+        x: (element.left + element.width / 2) - this.coordinates[0],
+        y: (element.top + element.height / 2) - this.coordinates[1]
       };
       return Math.atan2(distance.x, distance.y)
     },
@@ -121,23 +127,28 @@ export default {
       });
       return holdProxyNums.reduce((prev, curr) => prev.Cost < curr.Cost ? prev : curr);
     },
+    settingMauvinsStrokeStyle() {
+      // Setting Style Options On Mauvin's Stroke Border
+      if (this.$store.state.mouseSettings.stroke.strokeCursor) {
+        setTimeout(() => {
+          const mauvinStroke = document.querySelector('#mauvin-stroke');
+          mauvinStroke.style.setProperty('--style', this.$store.state.mouseSettings.stroke.borderStyle);
+          mauvinStroke.style.setProperty('--color', this.$store.state.mouseSettings.stroke.borderColor);
+          mauvinStroke.style.setProperty('--stroke', this.$store.state.mouseSettings.stroke.borderWidth + "px");
+          mauvinStroke.style.setProperty('--mauvinStrokeRadius', this.$store.state.mouseSettings.stroke.borderRaidus);
+          document.querySelector('#mauvin-stroke-real').style.setProperty('--color', this.$store.state.mouseSettings.stroke.borderColor);
+        }, 1)
 
+      }
+    },
     settingMauvinStyle() {
       const mauvin = this.$refs.mauvinCursor
-      const mauvinStroke = this.$refs.mauvinStroke;
       const mauvinImage = this.$refs.mauvinImage;
       // Setting Style Options On Mauvin
       mauvin.style.setProperty('--color', this.$store.state.mouseSettings.mauvin.color);
       mauvin.style.setProperty('--mauvinRadius', this.$store.state.mouseSettings.mauvin.borderRaidus);
-      // Setting Style Options On Mauvin's Stroke Border
-      if (this.$store.state.mouseSettings.stroke.strokeCursor) {
-        mauvinStroke.style.setProperty('--style', this.$store.state.mouseSettings.stroke.borderStyle);
-        mauvinStroke.style.setProperty('--color', this.$store.state.mouseSettings.stroke.borderColor);
-        mauvinStroke.style.setProperty('--stroke', this.$store.state.mouseSettings.stroke.borderWidth + "px");
-        mauvinStroke.style.setProperty('--mauvinStrokeRadius', this.$store.state.mouseSettings.stroke.borderRaidus);
-        mauvinStroke.style.setProperty('--height', this.$store.state.mouseSettings.stroke.size + "px");
-        mauvinStroke.style.setProperty('--width', this.$store.state.mouseSettings.stroke.size + "px");
-      }
+
+      this.settingMauvinsStrokeStyle();
       // Setting Style Options On Mauvin's Image
       if (this.$data.imageCursor) {
         mauvinImage.style.setProperty('--mauvinImageRadius', this.$data.image.borderRaidus);
@@ -153,9 +164,7 @@ export default {
       // Developer Tool
       if (this.$data.showCursorsProxyNum) elm.querySelector('.hypotenuse').innerHTML = Math.round(elm.dataset.hypotenuse);
     },
-
     onMouseMove(e) {
-      this.$data.coords = [e.clientX, e.clientY];
       this.$store.commit('mouseSettings/updateCoords', [e.clientX, e.clientY]);
       this.mauvinMovement()
     },
@@ -247,8 +256,8 @@ export default {
 
     mauvinTween() {
       TweenMax.to(this.$refs.mauvinCursor, this.$store.state.mouseSettings.mauvin.speed, {
-        x: this.mCoords[0] - (this.$store.state.mouseSettings.mauvin.size / 2),
-        y: this.mCoords[1] - (this.$store.state.mouseSettings.mauvin.size / 2),
+        x: this.coordinates[0] - (this.$store.state.mouseSettings.mauvin.size / 2),
+        y: this.coordinates[1] - (this.$store.state.mouseSettings.mauvin.size / 2),
         width: this.$store.state.mouseSettings.mauvin.size,
         height: this.$store.state.mouseSettings.mauvin.size,
       });
@@ -263,19 +272,19 @@ export default {
       }, this.$store.state.mouseSettings.mauvin.settlingDown));
     },
     mauvinDirection() {
-      if (this.mCoords[1] < this.$store.state.mouseSettings.mauvin.oldY) {
+      if (this.coordinates[1] < this.$store.state.mouseSettings.mauvin.oldY) {
         this.$store.commit('mouseSettings/cursorDirectionY', 'up');
-      } else if (this.mCoords[1] > this.$store.state.mouseSettings.mauvin.oldY) {
+      } else if (this.coordinates[1] > this.$store.state.mouseSettings.mauvin.oldY) {
         this.$store.commit('mouseSettings/cursorDirectionY', 'down');
       }
-      this.$store.commit('mouseSettings/oldCoordsY', this.mCoords[1]);
+      this.$store.commit('mouseSettings/oldCoordsY', this.coordinates[1]);
 
-      if (this.mCoords[0] < this.$store.state.mouseSettings.mauvin.oldX) {
+      if (this.coordinates[0] < this.$store.state.mouseSettings.mauvin.oldX) {
         this.$store.commit('mouseSettings/cursorDirectionX', 'left');
-      } else if (this.mCoords[0] > this.$store.state.mouseSettings.mauvin.oldX) {
+      } else if (this.coordinates[0] > this.$store.state.mouseSettings.mauvin.oldX) {
         this.$store.commit('mouseSettings/cursorDirectionX', 'right');
       }
-      this.$store.commit('mouseSettings/oldCoordsX', this.mCoords[0]);
+      this.$store.commit('mouseSettings/oldCoordsX', this.coordinates[0]);
 
       // this.$store.commit('mouseSettings/cursorDirectionX', this.$store.state.mouseSettings.mauvin.direction.x);
       // this.$store.commit('mouseSettings/cursorDirectionY', this.$store.state.mouseSettings.mauvin.direction.y);
@@ -286,8 +295,8 @@ export default {
       if (this.$store.state.mouseSettings.stroke.strokeCursor) {
         let size = this.$store.state.mouseSettings.stroke.size + (this.$store.state.mouseSettings.mauvin.size);
         TweenMax.to(this.$refs.mauvinStroke, this.$store.state.mouseSettings.stroke.speed, {
-          y: (this.mCoords[1] - (size / 2)),
-          x: (this.mCoords[0] - (size / 2)),
+          y: (this.coordinates[1] - (size / 2)),
+          x: (this.coordinates[0] - (size / 2)),
           width: size,
           height: size,
         });
@@ -358,8 +367,8 @@ export default {
 
         document.querySelector('#moving-action').classList.remove('move');
       }
-      document.querySelector('#grid').style.setProperty('--bgy', `${-(this.mCoords[0] - (this.$store.state.mouseSettings.mauvin.size / 2))}px`);
-      document.querySelector('#grid').style.setProperty('--bgx', `${-(this.mCoords[1] - (this.$store.state.mouseSettings.mauvin.size / 2))}px`);
+      document.querySelector('#grid').style.setProperty('--bgy', `${-(this.coordinates[0] - (this.$store.state.mouseSettings.mauvin.size / 2))}px`);
+      document.querySelector('#grid').style.setProperty('--bgx', `${-(this.coordinates[1] - (this.$store.state.mouseSettings.mauvin.size / 2))}px`);
     },
 
     startMauvin() {
@@ -383,31 +392,31 @@ export default {
       // Setting Muavins Styles
       this.settingMauvinStyle();
       // Grab Elements
-      // this.$data.elms = [...document.querySelectorAll('[data-mauvin-hover]')];
-      // // Grab magnet
-      // this.$data.magnetElms = [...document.querySelectorAll('[data-magnet]')];
-      //
-      // // let's Grab elements that are needed
-      // if (this.$data.elms.length > 0) {
-      //   // Add Mouse Listners to grab elements
-      //   this.$data.elms.forEach((elm, i) => {
-      //     elm.addEventListener('mouseenter', (e) => this.onMouseEnter(e));
-      //     elm.addEventListener('mouseleave', (e) => this.onMouseLeave(e));
-      //     // Form Data array about grab elements
-      //     this.$data.elmsData.push({
-      //       index: i,
-      //       node: elm,
-      //       data: elm.dataset,
-      //     });
-      //   });
-      //   // Developer helper tool
-      //   this.showMauvinLocation();
-      //   // Developer helper tool
-      //   if (this.$data.showMagnetProxy && this.$data.magnetElms > 0) {
-      //     window.addEventListener('resize', () => this.updateMagnetProxy(this.$data.elms));
-      //     this.createMagnetProxy(this.$data.elms);
-      //   }
-      // }
+      this.$data.elms = [...document.querySelectorAll('[data-mauvin-hover]')];
+      // Grab magnet
+      this.$data.magnetElms = [...document.querySelectorAll('[data-magnet]')];
+
+      // let's Grab elements that are needed
+      if (this.$data.elms.length > 0) {
+        // Add Mouse Listners to grab elements
+        this.$data.elms.forEach((elm, i) => {
+          elm.addEventListener('mouseenter', (e) => this.onMouseEnter(e));
+          elm.addEventListener('mouseleave', (e) => this.onMouseLeave(e));
+          // Form Data array about grab elements
+          this.$data.elmsData.push({
+            index: i,
+            node: elm,
+            data: elm.dataset,
+          });
+        });
+        // Developer helper tool
+        this.showMauvinLocation();
+        // Developer helper tool
+        if (this.$data.showMagnetProxy && this.$data.magnetElms > 0) {
+          window.addEventListener('resize', () => this.updateMagnetProxy(this.$data.elms));
+          this.createMagnetProxy(this.$data.elms);
+        }
+      }
       // Start Cursor
       this.startMauvin();
 
@@ -428,7 +437,7 @@ export default {
 <style lang="scss">
 $size: 10px;
 body {
-    cursor: none;
+    // cursor: none;
 }
 #mauvin-container {
     position: fixed;
@@ -438,6 +447,11 @@ body {
     pointer-events: none;
     top: 0;
     left: 0;
+
+    * {
+        pointer-events: none;
+
+    }
 
     #mauvin {
         position: absolute;
@@ -463,8 +477,6 @@ body {
     #mauvin-stroke {
         position: absolute;
         will-change: transform;
-        width: var(--width);
-        height: var(--height);
         border: var(--stroke) var(--style) var(--color);
         border-radius: var(--mauvinStrokeRadius);
     }
@@ -509,6 +521,7 @@ body {
         transform: rotate(360deg);
     }
 }
+
 // Developer Tool
 .hypotenuse {
     position: absolute;
@@ -519,27 +532,5 @@ body {
     color: white;
     pointer-events: none;
     font-size: 16px;
-}
-
-.floatUp {
-    position: absolute;
-    height: 10px;
-    width: 10px;
-    border-radius: 50px;
-    pointer-events: none;
-    background: red;
-    transform: translate(-50%, -50%);
-    animation: blow 40s linear infinite;
-}
-
-@keyframes blow {
-    0% {
-        transform: translate(-50%, -50%);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -1000%);
-        opacity: 0;
-    }
 }
 </style>

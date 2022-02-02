@@ -6,7 +6,7 @@ export const state = () => ({
     movingActionTime: {},
     speed: 0.2,
     settlingDown: 250,
-    color: 'green',
+    color: 'red',
     size: 10,
     defualtSize: 30,
     content: null,
@@ -19,9 +19,9 @@ export const state = () => ({
     }
   },
   stroke: {
-    strokeCursor: true,
+    strokeCursor: false,
     speed: 0.4,
-    size: 25,
+    size: 20,
     borderColor: 'red',
     borderStyle: 'solid',
     borderWidth: 1,
@@ -73,7 +73,7 @@ export const mutations = {
     state.mauvin.direction.y = val;
   },
   strokeCursor (state, val) {
-    state.strokeCursor = !state.strokeCursor;
+    state.stroke.strokeCursor = !state.stroke.strokeCursor;
   },
   strokeCursorColor (state, val) {
     state.stroke.borderColor = val;

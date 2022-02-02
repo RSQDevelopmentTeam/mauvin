@@ -88,11 +88,11 @@
       </div>
       <div class="setting">
         <h5>Stroke Border Color</h5>
-        <div class="color-dot-container">
+        <div class="color-dot-container stroke">
           <div :style="{backgroundColor: 'red'}" data-color="red" class="color-dot"></div>
           <div :style="{backgroundColor: 'green'}" data-color="green" class="color-dot"></div>
           <div :style="{backgroundColor: '#8f008d'}" data-color="#8f008d" class="color-dot"></div>
-          <div :style="{backgroundColor: '#00728f'}" data-color="#800728f" class="color-dot"></div>
+          <div :style="{backgroundColor: '#00728f'}" data-color="#00728f" class="color-dot"></div>
         </div>
       </div>
       <div class="setting rangeSlider">
@@ -101,9 +101,9 @@
         </veeno>
         <div class="num">{{mauvinsStrokeSize}}</div>
       </div>
-
     </div>
     <div id="moving-action" :style="`transform: scale(${(mauvinsSize / 5) * 1.2});`">
+      <div id="mauvin-stroke-real" v-if="this.$store.state.mouseSettings.stroke.strokeCursor"> </div>
       <div id="mauvin-person" ref="mauvin-person">
         <mauvinBody />
         <div id="mauvin-left">
@@ -178,25 +178,29 @@ export default {
       ]
     };
   },
-  computed: {},
+  computed: {
+    strokeCursor() {},
+  },
   watch: {
+    strokeCursor() {},
     mauvinsSize(val) {
       this.$store.commit('mouseSettings/character', val);
     },
     mauvinsStrokeSize(val) {
-      this.$store.commit('mouseSettings/strokeCursorSize', val);
+      // this.$store.commit('mouseSettings/strokeCursorSize', val);
     },
   },
   destroyed: function() {},
   mounted: function() {
     document.querySelector('.js-toggle-stroke').addEventListener('click', () => {
       document.querySelector('.js-toggle-stroke').classList.toggle('is-on');
-      // this.$store.commit('mouseSt/strokeCursor', true);
+      this.$store.commit('mouseSettings/strokeCursor', this.$store.state.mouseSettings.stroke.strokeCursor);
+      // console.log(this.$store.state.mouseSettings.stroke.strokeCursor)
     });
 
     // document.querySelector('js-toggle-stroke').addEventListener('click', () => {
     //   document.querySelector('js-toggle-stroke').classList.toggle('is-on');
-    //   this.$store.commit('mouseSettings/strokeCursor', true);
+    //   // this.$store.commit('mouseSettings/strokeCursor', true);
     // });
 
 
@@ -205,6 +209,14 @@ export default {
       if (typeof e.target.dataset.color !== 'undefined') {
         this.$store.commit('mouseSettings/cursorColor', e.target.dataset.color);
         document.querySelector('#mauvin-color').style.setProperty('--color', e.target.dataset.color);
+      }
+    })
+
+    document.querySelector('.color-dot-container.stroke').addEventListener('click', (e) => {
+      if (typeof e.target.dataset.color !== 'undefined') {
+        this.$store.commit('mouseSettings/strokeCursorColor', e.target.dataset.color);
+        document.querySelector('#mauvin-stroke').style.setProperty('--color', e.target.dataset.color);
+        document.querySelector('#mauvin-stroke-real').style.setProperty('--color', this.$store.state.mouseSettings.stroke.borderColor);
 
       }
     })
