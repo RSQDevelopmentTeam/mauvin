@@ -33,15 +33,6 @@ export default {
         src: '/img/default.jpg',
         borderRaidus: '50%'
       },
-      floatCursor: true,
-      floatingCursor: {
-        speed: 0.4,
-        size: 25,
-        borderColor: 'red',
-        borderStyle: 'solid',
-        borderWidth: 1,
-        borderRaidus: '50%',
-      },
       effectAllElementsInArea: false,
       RunMauvin: null,
       raf: null
@@ -78,14 +69,12 @@ export default {
     },
     strokeCursor() {
       return this.$store.state.mouseSettings.stroke.strokeCursor;
-
     },
   },
   watch: {
     strokeCursor(oldVal, newVal) {
       this.settingMauvinsStrokeStyle();
       return this.$store.state.mouseSettings.stroke.strokeCursor;
-
     },
     elm() {},
     activate() {},
@@ -127,16 +116,27 @@ export default {
       });
       return holdProxyNums.reduce((prev, curr) => prev.Cost < curr.Cost ? prev : curr);
     },
+    disperseMouseData(i, arr, elm) {
+      // Apply Data to element
+      this.setAttributes(elm, {
+        'data-hypotenuse': this.hypotenuse(elm),
+        'data-index': i,
+        'data-inProxy': (elm.dataset.mauvinsemitsdistances) ? this.hypotenuse(elm) <= elm.dataset.mauvinsemitsdistances : 'proxyoff'
+      });
+      // Developer Tool
+      if (this.$data.showCursorsProxyNum) elm.querySelector('.hypotenuse').innerHTML = Math.round(elm.dataset.hypotenuse);
+    },
+
     settingMauvinsStrokeStyle() {
       // Setting Style Options On Mauvin's Stroke Border
       if (this.$store.state.mouseSettings.stroke.strokeCursor) {
         setTimeout(() => {
           const mauvinStroke = document.querySelector('#mauvin-stroke');
           mauvinStroke.style.setProperty('--style', this.$store.state.mouseSettings.stroke.borderStyle);
-          mauvinStroke.style.setProperty('--color', this.$store.state.mouseSettings.stroke.borderColor);
+          mauvinStroke.style.setProperty('--color', this.$store.state.mouseSettings.stroke.color);
           mauvinStroke.style.setProperty('--stroke', this.$store.state.mouseSettings.stroke.borderWidth + "px");
           mauvinStroke.style.setProperty('--mauvinStrokeRadius', this.$store.state.mouseSettings.stroke.borderRaidus);
-          document.querySelector('#mauvin-stroke-real').style.setProperty('--color', this.$store.state.mouseSettings.stroke.borderColor);
+          document.querySelector('#mauvin-stroke-real').style.setProperty('--color', this.$store.state.mouseSettings.stroke.color);
         }, 1)
 
       }
@@ -154,16 +154,7 @@ export default {
         mauvinImage.style.setProperty('--mauvinImageRadius', this.$data.image.borderRaidus);
       }
     },
-    disperseMouseData(i, arr, elm) {
-      // Apply Data to element
-      this.setAttributes(elm, {
-        'data-hypotenuse': this.hypotenuse(elm),
-        'data-index': i,
-        'data-inProxy': (elm.dataset.mauvinsemitsdistances) ? this.hypotenuse(elm) <= elm.dataset.mauvinsemitsdistances : 'proxyoff'
-      });
-      // Developer Tool
-      if (this.$data.showCursorsProxyNum) elm.querySelector('.hypotenuse').innerHTML = Math.round(elm.dataset.hypotenuse);
-    },
+
     onMouseMove(e) {
       this.$store.commit('mouseSettings/updateCoords', [e.clientX, e.clientY]);
       this.mauvinMovement()
@@ -181,78 +172,78 @@ export default {
       // this.$store.commit('mouseSettings/cursorSize', this.$store.state.mouseSettings.mauvin.defualtSize);
     },
 
-    showMauvinLocation() {
-      if (this.$data.showCursorsProxyNum && this.$data.magnetElms > 0) {
-        if (document.querySelectorAll('.hypotenuse').length !== this.$data.elms.length) {
-          this.$data.elms.forEach((elm, i) => {
-            let cursorProxyData = document.createElement("div");
-            cursorProxyData.className = 'hypotenuse';
-            cursorProxyData.innerHTML = Math.round(elm.dataset.hypotenuse);
-            elm.appendChild(cursorProxyData);
-          })
-        }
-      }
-    },
-    createMagnetProxy(elm) {
-      if (document.querySelectorAll('.magnetic-size').length !== this.$data.elms.length) {
-        elm.forEach((elm) => {
-          if (elm.dataset.mauvinsemitsdistances !== undefined) {
-            let magnetSize = document.createElement("div");
-            magnetSize.className = 'magnetic-size';
-            magnetSize.style.height = `${this.getMagnetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
-            magnetSize.style.width = `${this.getMagnetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
-            elm.appendChild(magnetSize);
-          }
-        });
-      }
-    },
-    getMagnetProxy(elm, width, height) {
-      let distance;
-      if (elm.dataset.mauvinsemitsdistances) {
-        distance = elm.dataset.mauvinsemitsdistances * 2;
-      } else if (distance === undefined) {
-        distance = (height < width) ? width : height;
-        distance = distance / 33;
-      }
-      return distance;
-    },
-    updateMagnetProxy(elm) {
-      elm.forEach((elm) => {
-        elm.querySelector('.magnetic-size').style.height = `${this.getMagnetProxy(elm,elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
-        elm.querySelector('.magnetic-size').style.width = `${this.getMagnetProxy(elm,elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
-      })
-    },
+    // showMauvinLocation() {
+    //   if (this.$data.showCursorsProxyNum && this.$data.magnetElms > 0) {
+    //     if (document.querySelectorAll('.hypotenuse').length !== this.$data.elms.length) {
+    //       this.$data.elms.forEach((elm, i) => {
+    //         let cursorProxyData = document.createElement("div");
+    //         cursorProxyData.className = 'hypotenuse';
+    //         cursorProxyData.innerHTML = Math.round(elm.dataset.hypotenuse);
+    //         elm.appendChild(cursorProxyData);
+    //       })
+    //     }
+    //   }
+    // },
+    // createMagnetProxy(elm) {
+    //   if (document.querySelectorAll('.magnetic-size').length !== this.$data.elms.length) {
+    //     elm.forEach((elm) => {
+    //       if (elm.dataset.mauvinsemitsdistances !== undefined) {
+    //         let magnetSize = document.createElement("div");
+    //         magnetSize.className = 'magnetic-size';
+    //         magnetSize.style.height = `${this.getMagnetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
+    //         magnetSize.style.width = `${this.getMagnetProxy(elm, elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
+    //         elm.appendChild(magnetSize);
+    //       }
+    //     });
+    //   }
+    // },
+    // getMagnetProxy(elm, width, height) {
+    //   let distance;
+    //   if (elm.dataset.mauvinsemitsdistances) {
+    //     distance = elm.dataset.mauvinsemitsdistances * 2;
+    //   } else if (distance === undefined) {
+    //     distance = (height < width) ? width : height;
+    //     distance = distance / 33;
+    //   }
+    //   return distance;
+    // },
+    // updateMagnetProxy(elm) {
+    //   elm.forEach((elm) => {
+    //     elm.querySelector('.magnetic-size').style.height = `${this.getMagnetProxy(elm,elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
+    //     elm.querySelector('.magnetic-size').style.width = `${this.getMagnetProxy(elm,elm.getBoundingClientRect().width, elm.getBoundingClientRect().height)}px`;
+    //   })
+    // },
 
-    magnetTween(elm) {
-      TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
-        x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-        y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
-      });
-    },
-    magnetTweenReset(elm) {
-      TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
-        x: 0,
-        y: 0,
-      });
-    },
-    magnetize() {
-      this.$data.elms.forEach((elm) => {
-        if (!this.$data.effectAllElementsInArea && this.$data.magnetElms > 0) {
-          let closestToCursor = this.closestToCursor(this.$data.elms);
-          if (closestToCursor.elm === elm && elm.dataset.inproxy === "true") {
-            this.magnetTween(elm);
-          } else {
-            this.magnetTweenReset(elm);
-          }
-        } else {
-          if (elm.dataset.inproxy === "true") {
-            this.magnetTween(elm);
-          } else {
-            this.magnetTweenReset(elm);
-          }
-        }
-      });
-    },
+    // magnetTween(elm) {
+    //   TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
+    //     x: -((Math.sin(this.angle(elm)) * this.hypotenuse(elm)) / 2),
+    //     y: -((Math.cos(this.angle(elm)) * this.hypotenuse(elm)) / 2),
+    //   });
+    // },
+    // magnetTweenReset(elm) {
+    //   TweenMax.to(elm.querySelector('[data-magnet]'), this.$data.magnet.speed, {
+    //     x: 0,
+    //     y: 0,
+    //   });
+    // },
+    // magnetize() {
+    //   this.$data.elms.forEach((elm) => {
+    //     if (!this.$data.effectAllElementsInArea && this.$data.magnetElms > 0) {
+    //       let closestToCursor = this.closestToCursor(this.$data.elms);
+    //       if (closestToCursor.elm === elm && elm.dataset.inproxy === "true") {
+    //         this.magnetTween(elm);
+    //       } else {
+    //         this.magnetTweenReset(elm);
+    //       }
+    //     } else {
+    //       if (elm.dataset.inproxy === "true") {
+    //         this.magnetTween(elm);
+    //       } else {
+    //         this.magnetTweenReset(elm);
+    //       }
+    //     }
+    //   });
+    // },
 
     mauvinTween() {
       TweenMax.to(this.$refs.mauvinCursor, this.$store.state.mouseSettings.mauvin.speed, {
@@ -291,19 +282,9 @@ export default {
 
     },
 
-    createStroke() {
-      if (this.$store.state.mouseSettings.stroke.strokeCursor) {
-        let size = this.$store.state.mouseSettings.stroke.size + (this.$store.state.mouseSettings.mauvin.size);
-        TweenMax.to(this.$refs.mauvinStroke, this.$store.state.mouseSettings.stroke.speed, {
-          y: (this.coordinates[1] - (size / 2)),
-          x: (this.coordinates[0] - (size / 2)),
-          width: size,
-          height: size,
-        });
-      }
-    },
-
     mauvinCharacter() {
+
+
       if (this.$store.state.mouseSettings.mauvin.moving) {
         if (this.$store.state.mouseSettings.mauvin.direction.x === 'right') {
           TweenMax.to('#mauvin-person', 2, {
@@ -369,15 +350,28 @@ export default {
       }
       document.querySelector('#grid').style.setProperty('--bgy', `${-(this.coordinates[0] - (this.$store.state.mouseSettings.mauvin.size / 2))}px`);
       document.querySelector('#grid').style.setProperty('--bgx', `${-(this.coordinates[1] - (this.$store.state.mouseSettings.mauvin.size / 2))}px`);
+
+      if (document.querySelector('#mauvin-person') < 0) {}
     },
 
+    createStrokeMauvin() {
+      if (this.$store.state.mouseSettings.stroke.strokeCursor) {
+        let size = this.$store.state.mouseSettings.stroke.size + (this.$store.state.mouseSettings.mauvin.size);
+        TweenMax.to(this.$refs.mauvinStroke, this.$store.state.mouseSettings.stroke.speed, {
+          y: (this.coordinates[1] - (size / 2)),
+          x: (this.coordinates[0] - (size / 2)),
+          width: size,
+          height: size,
+        });
+      }
+    },
     startMauvin() {
       this.$data.RunMauvin = () => {
         this.mauvinCharacter();
         this.mauvinTween();
         this.mauvinDirection();
 
-        this.createStroke();
+        this.createStrokeMauvin();
 
         // this.magnetize();
         this.$data.raf = requestAnimationFrame(this.$data.RunMauvin);
@@ -441,21 +435,17 @@ body {
 }
 #mauvin-container {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     z-index: 999;
     pointer-events: none;
-    top: 0;
-    left: 0;
-
-    * {
-        pointer-events: none;
-
-    }
 
     #mauvin {
         position: absolute;
         will-change: transform;
+
         #mauvin-color {
             position: absolute;
             width: 100%;
@@ -474,6 +464,7 @@ body {
             z-index: 9999;
         }
     }
+
     #mauvin-stroke {
         position: absolute;
         will-change: transform;

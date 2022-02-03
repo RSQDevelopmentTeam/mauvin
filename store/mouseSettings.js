@@ -6,7 +6,7 @@ export const state = () => ({
     movingActionTime: {},
     speed: 0.2,
     settlingDown: 250,
-    color: 'red',
+    color: 'rgb(255, 0, 0)',
     size: 10,
     defualtSize: 30,
     content: null,
@@ -22,7 +22,7 @@ export const state = () => ({
     strokeCursor: false,
     speed: 0.4,
     size: 20,
-    borderColor: 'red',
+    color: 'rgb(255, 0, 0)',
     borderStyle: 'solid',
     borderWidth: 1,
     borderRaidus: '50%',
@@ -76,7 +76,7 @@ export const mutations = {
     state.stroke.strokeCursor = !state.stroke.strokeCursor;
   },
   strokeCursorColor (state, val) {
-    state.stroke.borderColor = val;
+    state.stroke.color = val;
   },
   strokeCursorSize (state, val) {
     state.stroke.size = val;

@@ -17,7 +17,8 @@
     "nuxt": "^2.15.7",
     "veeno": "^0.0.4",
     "vue-observe-visibility": "^1.0.0",
-    "vue-range-slider": "^0.6.0"
+    "vue-range-slider": "^0.6.0",
+    "wavify": "^1.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",

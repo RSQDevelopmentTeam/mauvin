@@ -45,13 +45,13 @@
           <h4>Stroke</h4>
           <ul>
             <li>
-              <span>Turn Stroke on: </span> <span class="data">{{this.$store.state.mouseSettings.strokeCursor}}</span>
+              <span>Turn Stroke on: </span> <span class="data">{{this.$store.state.mouseSettings.stroke.strokeCursor}}</span>
             </li>
             <li>
               <span>Stroke Size:</span> <span class="data">{{mauvinsStrokeSize}}</span>
             </li>
             <li>
-              <span>Stroke Color:</span> <span class="data">{{this.$store.state.mouseSettings.stroke.borderColor}}</span>
+              <span>Stroke Color:</span> <span class="data">{{this.$store.state.mouseSettings.stroke.color}}</span>
             </li>
           </ul>
         </div>
@@ -64,15 +64,15 @@
       <div class="setting">
         <h5>Cursor Color</h5>
         <div class="color-dot-container mauvin">
-          <div :style="{backgroundColor: 'red'}" data-color="red" class="color-dot"></div>
-          <div :style="{backgroundColor: 'green'}" data-color="green" class="color-dot"></div>
-          <div :style="{backgroundColor: '#8f008d'}" data-color="#8f008d" class="color-dot"></div>
-          <div :style="{backgroundColor: '#00728f'}" data-color="#00728f" class="color-dot"></div>
+          <div :style="{backgroundColor: 'rgb(255, 0, 0)'}" data-color="rgb(255, 0, 0)" class="color-dot" @click="updateCursorColor"></div>
+          <div :style=" {backgroundColor: '#18A558' }" data-color="#18A558" class="color-dot" @click="updateCursorColor"></div>
+          <div :style="{backgroundColor: '#8f008d'}" data-color="#8f008d" class="color-dot" @click="updateCursorColor"></div>
+          <div :style="{backgroundColor: '#00728f'}" data-color="#00728f" class="color-dot" @click="updateCursorColor"> </div>
         </div>
       </div>
       <div class="setting">
         <h5>Stroke Border</h5>
-        <div class="toggle-container toggle js-toggle-stroke">
+        <div class="toggle-container toggle js-toggle-stroke" @click="toggleStroke">
           <div class="toggle__handle"></div>
           <div class="toggle-section">
             <div class="mauvin-toggle-dot">
@@ -86,21 +86,21 @@
           </div>
         </div>
       </div>
-      <div class="setting">
+      <div class="setting" v-if="this.$store.state.mouseSettings.stroke.strokeCursor">
         <h5>Stroke Border Color</h5>
         <div class="color-dot-container stroke">
-          <div :style="{backgroundColor: 'red'}" data-color="red" class="color-dot"></div>
-          <div :style="{backgroundColor: 'green'}" data-color="green" class="color-dot"></div>
-          <div :style="{backgroundColor: '#8f008d'}" data-color="#8f008d" class="color-dot"></div>
-          <div :style="{backgroundColor: '#00728f'}" data-color="#00728f" class="color-dot"></div>
+          <div :style="{backgroundColor: 'rgb(255, 0, 0)'}" data-color="rgb(255, 0, 0)" class="color-dot" @click="updateStrokeColor"></div>
+          <div :style=" {backgroundColor: '#18A558' }" data-color="#18A558" class="color-dot" @click="updateStrokeColor"></div>
+          <div :style="{backgroundColor: '#8f008d'}" data-color="#8f008d" class="color-dot" @click="updateStrokeColor"></div>
+          <div :style="{backgroundColor: '#00728f'}" data-color="#00728f" class="color-dot" @click="updateStrokeColor"> </div>
         </div>
       </div>
-      <div class="setting rangeSlider">
+      <!-- <div class="setting rangeSlider">
         <h5>Cursor Sroke Size</h5>
         <veeno v-model="mauvinsStrokeSize" :handles="20" :range="{ 'min': 0, 'max': 35 }">
         </veeno>
         <div class="num">{{mauvinsStrokeSize}}</div>
-      </div>
+      </div> -->
     </div>
     <div id="moving-action" :style="`transform: scale(${(mauvinsSize / 5) * 1.2});`">
       <div id="mauvin-stroke-real" v-if="this.$store.state.mouseSettings.stroke.strokeCursor"> </div>
@@ -114,13 +114,20 @@
         </div>
       </div>
     </div>
-
   </section>
   <section id="code-section" data-scroll-section>
-    <div id="mauvins-content" class="text-center">
-      <p>
-        Mauvin is a custom cursor for Vue.js project that provide custom cursor features giving you access to a modest array of tools to help get your work done faster.
-      </p>
+    <div class="hero grid grid-cols-12 gap-8 lg:gap-32 mx-8 lg:mx-64 mb-64">
+      <div class="col-span-12 2xl:col-span-10">
+        <div id="mauvins-content" class="text-center">
+          <p>Mauvin is a custom cursor for Vue.js project that provide prebuilt features giving you access to a modest array of tools to help get your work done faster well still staying unique.</p>
+          <ul>
+            <li>
+              <h3>STYLING</h3>
+              <p>Mauvin can be customized</p>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 </div>
@@ -133,6 +140,7 @@ import meta from '~/mixins/meta.js';
 import locoControls from '~/mixins/locoControls.js';
 // you probably need to import built-in style
 import veeno from 'veeno'
+
 import 'nouislider/distribute/nouislider.min.css';
 import mauvinBody from '../components/mauvinBody';
 
@@ -192,39 +200,36 @@ export default {
   },
   destroyed: function() {},
   mounted: function() {
-    document.querySelector('.js-toggle-stroke').addEventListener('click', () => {
-      document.querySelector('.js-toggle-stroke').classList.toggle('is-on');
-      this.$store.commit('mouseSettings/strokeCursor', this.$store.state.mouseSettings.stroke.strokeCursor);
-      // console.log(this.$store.state.mouseSettings.stroke.strokeCursor)
-    });
-
-    // document.querySelector('js-toggle-stroke').addEventListener('click', () => {
-    //   document.querySelector('js-toggle-stroke').classList.toggle('is-on');
-    //   // this.$store.commit('mouseSettings/strokeCursor', true);
-    // });
-
-
-
-    document.querySelector('.color-dot-container.mauvin').addEventListener('click', (e) => {
-      if (typeof e.target.dataset.color !== 'undefined') {
-        this.$store.commit('mouseSettings/cursorColor', e.target.dataset.color);
-        document.querySelector('#mauvin-color').style.setProperty('--color', e.target.dataset.color);
-      }
-    })
-
-    document.querySelector('.color-dot-container.stroke').addEventListener('click', (e) => {
-      if (typeof e.target.dataset.color !== 'undefined') {
-        this.$store.commit('mouseSettings/strokeCursorColor', e.target.dataset.color);
-        document.querySelector('#mauvin-stroke').style.setProperty('--color', e.target.dataset.color);
-        document.querySelector('#mauvin-stroke-real').style.setProperty('--color', this.$store.state.mouseSettings.stroke.borderColor);
-
-      }
-    })
-
     this.animateIn(this.finishedAnimating);
   },
   created: function() {},
   methods: {
+    toggleStroke() {
+      document.querySelector('.js-toggle-stroke').classList.toggle('is-on');
+      this.$store.commit('mouseSettings/strokeCursor', this.$store.state.mouseSettings.stroke.strokeCursor);
+    },
+    updateCursorColor(e) {
+      if (typeof e.target.dataset.color !== 'undefined' && !e.target.classList.contains('active')) {
+        document.querySelector('#mauvin-color').style.setProperty('--color', e.target.dataset.color);
+        this.$store.commit('mouseSettings/cursorColor', e.target.dataset.color);
+        document.querySelectorAll('.color-dot-container.mauvin .color-dot').forEach((elm) => {
+          elm.classList.remove('active')
+        })
+        e.target.classList.add('active');
+
+        document.querySelector('#grid').style.setProperty('--color', e.target.dataset.color);
+
+      }
+    },
+    updateStrokeColor(e) {
+      if (typeof e.target.dataset.color !== 'undefined') {
+        document.querySelector('#mauvin-stroke').style.setProperty('--color', e.target.dataset.color);
+        document.querySelector('#mauvin-stroke-real').style.setProperty('--color', e.target.dataset.color);
+        this.$store.commit('mouseSettings/strokeCursorColor', e.target.dataset.color);
+        document.querySelectorAll('.color-dot-container.stroke .color-dot').forEach((elm) => elm.classList.remove('active'))
+        e.target.classList.add('active')
+      }
+    },
     finishedAnimating: function() {
       this.locomotiveScrollInit();
     },
