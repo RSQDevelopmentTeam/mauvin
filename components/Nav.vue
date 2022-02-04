@@ -1,16 +1,6 @@
 <template>
 <nav v-if="ready" id="nav">
   <div id="logo"></div>
-  <div class="flex justify-end">
-    <ul class="flex">
-      <li class="mx-8">
-        <a href="#about">Github</a>
-      </li>
-      <li class="mx-8">
-        <a href="#instruction">Contact Us</a>
-      </li>
-    </ul>
-  </div>
 </nav>
 </template>
 
@@ -59,6 +49,7 @@ a {
   justify-content: space-between;
   align-items: center;
   margin: 0 32px;
+  z-index: 3;
 
   &.nav-enter-active {
     opacity: 0;

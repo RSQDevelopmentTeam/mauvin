@@ -1,12 +1,19 @@
 export const state = () => ({
   coords: [-30, -30],
   dotCursor: true,
+  elms: [],
+  elmsData: [],
+  magnetElms: [],
+  magnet: {
+    speed: 0.2,
+    showMagnetProxy: false,
+  },
   mauvin: {
     moving: false,
     movingActionTime: {},
     speed: 0.2,
     settlingDown: 250,
-    color: 'rgb(255, 0, 0)',
+    color: '#FFE433',
     size: 10,
     defualtSize: 30,
     content: null,
@@ -22,7 +29,7 @@ export const state = () => ({
     strokeCursor: false,
     speed: 0.4,
     size: 20,
-    color: 'rgb(255, 0, 0)',
+    color: '#FFE433',
     borderStyle: 'solid',
     borderWidth: 1,
     borderRaidus: '50%',
@@ -80,5 +87,14 @@ export const mutations = {
   },
   strokeCursorSize (state, val) {
     state.stroke.size = val;
+  },
+  addingElements(state, val) {
+    state.elms = val;
+  },
+  addingElementsData(state, val) {
+    state.elmsData.push(val);
+  },
+  addingMagnetElements(state, val) {
+    state.magnetElms = val;
   },
 };
