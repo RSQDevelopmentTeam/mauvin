@@ -50,6 +50,7 @@ a {
   align-items: center;
   margin: 0 32px;
   z-index: 3;
+  pointer-events: none;
 
   &.nav-enter-active {
     opacity: 0;

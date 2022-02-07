@@ -133,10 +133,8 @@ $yellow: #ffdd00;
         #mauvin-logo {
           position: relative;
           z-index:1;
-          width: 100%;
-          max-width: 460px;
-          height: 65px;
-          margin: 0 auto 30px auto;
+          width: 150px;
+          margin: 0 auto 0px auto;
           .st0 {
             opacity: 0.3;
             fill: #3C2415;
@@ -174,7 +172,24 @@ $yellow: #ffdd00;
           box-shadow: 3px 3px 0px rgb(0 0 0 / 10%);
           padding: 10px 5px;
           border-radius: 20px;
-          background-color: rgb(0 0 0 / 7%);
+        box-shadow: 3px 3px 0px rgb(0 0 0 / 19%);
+        }
+      }
+
+      .developer-tools {
+        margin-bottom: 5px;
+        // border-radius: 20px;
+        text-align: center;
+        font-size: 16px;
+        line-height: 25px;
+        color: #444431;
+        // margin-bottom: 5px;
+        background-color: rgb(0 0 0 / 7%);
+        // box-shadow: 3px 3px 0px rgb(0 0 0 / 10%);
+        transition: all 250ms ease-in;
+        @include hover {
+          box-shadow: 0px 0px 0px rgb(0 0 0 / 10%);
+
         }
       }
 
@@ -394,11 +409,11 @@ $yellow: #ffdd00;
       * {
         will-change: transform;
       }
-
     }
+
     #mauvin-stroke-real {
       position: relative;
-      padding: 20%;
+      padding: 15%;
 
       #stroke-adpot {
         width: 100%;
@@ -570,23 +585,22 @@ $yellow: #ffdd00;
     background: radial-gradient(circle, rgba(43,43,43,1) 0%, rgba(0,0,0,1) 100%);
     padding: 32px 0 22px 0;
 
-  a {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 62px;
-    line-height: 0.8;
-    -webkit-text-stroke: 1px var(--adpotColor);
+    a {
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 62px;
+      line-height: 0.8;
+      -webkit-text-stroke: 1px var(--adpotColor);
 
-    transition: all 400ms ease-in-out;
-    text-shadow: 1.5px 1.5px 0 #000, 0px 1.5px 0 #000, -1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px -1.5px 0 #000, 0.7778174593px 0.7778174593px 0 var(--adpotColor), 1.5556349186px 1.5556349186px 0 var(--adpotColor), 2.3334523779px 2.3334523779px 0 var(--adpotColor), 3.1112698372px 3.1112698372px 0 var(--adpotColor), 3.8890872965px 3.8890872965px 0 var(--adpotColor), 4.6669047558px 4.6669047558px 0 var(--adpotColor), 5.4447222151px 5.4447222151px 0 var(--adpotColor), 6.2225396744px 6.2225396744px 0 var(--adpotColor), 7.0003571337px 7.0003571337px 0 var(--adpotColor), 7.7781745931px 7.7781745931px 0 var(--adpotColor);
+      transition: all 400ms ease-in-out;
+      text-shadow: 1.5px 1.5px 0 #000, 0px 1.5px 0 #000, -1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px -1.5px 0 #000, 0.7778174593px 0.7778174593px 0 var(--adpotColor), 1.5556349186px 1.5556349186px 0 var(--adpotColor), 2.3334523779px 2.3334523779px 0 var(--adpotColor), 3.1112698372px 3.1112698372px 0 var(--adpotColor), 3.8890872965px 3.8890872965px 0 var(--adpotColor), 4.6669047558px 4.6669047558px 0 var(--adpotColor), 5.4447222151px 5.4447222151px 0 var(--adpotColor), 6.2225396744px 6.2225396744px 0 var(--adpotColor), 7.0003571337px 7.0003571337px 0 var(--adpotColor), 7.7781745931px 7.7781745931px 0 var(--adpotColor);
 
-    @include hover {
-      text-shadow: 1.5px 1.5px 0 #000, -1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000;
+      @include hover {
+        text-shadow: 1.5px 1.5px 0 #000, -1.5px -1.5px 0 #000, -1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000;
+      }
     }
-  }
 
     .download {
       text-align: center;
-
     }
   }
 
@@ -603,17 +617,6 @@ $yellow: #ffdd00;
     , #0d0d0d 0%, black 100%);
 
 
-
-    .magnetic {
-      width: 100%;
-      max-width: 150px;
-      background-color: red;
-      border-radius: 30px;
-      height: 100%;
-      min-height: 150px;
-      margin: 0 auto;
-    }
-
     h2 {
       font-size: 28px;
       line-height: 1.1;
@@ -625,7 +628,15 @@ $yellow: #ffdd00;
       font-size: 12px;
       margin-bottom: 30px;
     }
-
+    .magnetic {
+      width: 100%;
+      max-width: 150px;
+      background-color: red;
+      border-radius: 30px;
+      height: 100%;
+      min-height: 150px;
+      margin: 0 auto;
+    }
     .code-feature-container {
       margin-bottom: 30px;
 
@@ -660,6 +671,137 @@ $yellow: #ffdd00;
         padding: 10px 5px;
       }
     }
+  }
+}
+
+.magnetic-info {
+  position: absolute;
+  width: 80px;
+  height: 100px;
+  margin: 0 auto;
+  background-image: url('/img/elm.svg');
+  background-repeat: no-repeat;
+  border-radius: 30px;
+  z-index: 0;
+  transform: translate(var(--bgy),var(--bgx));
+  // transform: translate(120px, 50%);
+  &:after {
+    content: 'HI!';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 9px 5px 0 5px;
+    font-family: 'Luckiest Guy', cursive;
+    line-height:.8;
+    font-size: 22px;
+    color: black;
+    background-color: white;
+    transform: scale(.3);
+    opacity: 0;
+    transition: all 300ms ease-in;
+  }
+
+  .eye-ball {
+    height: 60px;
+    width: 62px;
+    background-image: url('/img/little-eye.svg');
+    background-repeat: no-repeat;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-content: center;
+    z-index: 33;
+    font-size: 33px;
+  }
+
+  .meg {
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-content: center;
+    background-image: url('/img/little-pep.svg');
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 40px;
+  }
+
+  &.one {
+    bottom: calc(2vh + 40px);
+    left: calc(35vw);
+
+    &:before {
+      // content:'Elm Zero';
+    }
 
   }
+
+  &.two {
+    bottom: calc(12vh + 40px);
+    left: calc(50vw + 40px);
+
+    &:before {
+      // content:'Elm One';
+    }
+  }
+
+  &.three {
+    bottom: calc(8vh + 40px);
+    left: calc(125vw + 40px);
+
+    &:before {
+      // content:'Elm Two';
+    }
+  }
+
+  &.four {
+    bottom: calc(18vh + 40px);
+    left: calc(105vw + 40px);
+
+    &:before {
+      // content:'Elm Three';
+    }
+  }
+
+  &:before {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: absolute;
+    top: 0;
+    left:  0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transform: rotate(90deg);
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+[data-inproxy='true'] {
+  &:after {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#grid-container{
+  position: relative;
+  pointer-events: none;
 }

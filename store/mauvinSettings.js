@@ -1,14 +1,16 @@
 export const state = () => ({
   coords: [-30, -30],
-  dotCursor: true,
+  elm: {
+    data: {}
+  },
   elms: [],
   elmsData: [],
-  magnetElms: [],
-  magnet: {
-    speed: 0.2,
-    showMagnetProxy: false,
-  },
+  dotCursor: true,
+  effectAllElementsInArea: true,
+  showCursorsProxyNum: true,
   mauvin: {
+    activate: false,
+    closestElement: {},
     moving: false,
     movingActionTime: {},
     speed: 0.2,
@@ -23,7 +25,8 @@ export const state = () => ({
     direction: {
       y: '',
       x: ''
-    }
+    },
+
   },
   stroke: {
     strokeCursor: false,
@@ -33,6 +36,11 @@ export const state = () => ({
     borderStyle: 'solid',
     borderWidth: 1,
     borderRaidus: '50%',
+  },
+  magnetElms: [],
+  magnet: {
+    speed: 0.2,
+    showMagnetProxy: false,
   },
   character: {
     size: 30
@@ -58,6 +66,12 @@ export const mutations = {
   cursorMoving (state, val) {
     state.mauvin.moving = val;
   },
+  activate (state, val) {
+    state.mauvin.activate = val;
+  },
+  deactivate (state, val) {
+    state.mauvin.activate = val;
+  },
   settlingDown (state, val) {
     state.mauvin.settlingDown = val;
   },
@@ -69,6 +83,9 @@ export const mutations = {
   },
   cursorColor (state, val) {
     state.mauvin.color = val;
+  },
+  closestElement(state,val) {
+    state.mauvin.closestElement = val;
   },
   cursorSize (state, val) {
     state.mauvin.size = val;
@@ -96,5 +113,11 @@ export const mutations = {
   },
   addingMagnetElements(state, val) {
     state.magnetElms = val;
+  },
+  elmData (state, val) {
+    state.elm.data = val;
+  },
+  showTrigger (state, val) {
+    state.showCursorsProxyNum = val;
   },
 };

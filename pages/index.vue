@@ -1,6 +1,19 @@
 <template>
 <div id="home-page" data-scroll-container :class="introClasses">
   <section id="intro-section" data-scroll-section>
+    <div class="magnetic-info one" data-mauvin-hover></div>
+    <div class="magnetic-info two" data-mauvin-hover data-emitdistance="30"></div>
+    <div class="magnetic-info three" data-mauvin-hover data-emitdistance="30" data-mauvin-magnet>
+      <div class="eye-ball">
+        <div class="meg"></div>
+      </div>
+    </div>
+
+    <div class="magnetic-info four" data-mauvin-hover data-emitdistance="30" data-mauvin-magnet>
+      <div class="eye-ball">
+        <div class="meg"></div>
+      </div>
+    </div>
 
     <div id="grid-container">
       <div id="grid"></div>
@@ -135,15 +148,30 @@
               <path class="st5" d="M82.1,29.5c-0.1-0.1-0.2-0.4,0-0.5c0.1-0.2,0.4-0.2,0.6-0.1s0.1,0.4,0,0.6C82.5,29.6,82.2,29.6,82.1,29.5z" />
             </g>
           </svg>
-
         </div>
-        <p>A Vue Cursor With Prebuilt Features</p>
+        <!-- <p>A Vue Cursor With Prebuilt Features</p> -->
       </div>
-
       <div class="setting data-container">
+        <div class="developer-tools show-trigger">Show Trigger Line Is <strong>{{this.$store.state.mauvinSettings.effectAllElementsInArea}}</strong></div>
+        <div class="developer-tools show-trigger">Show Distance <strong>{{this.$store.state.mauvinSettings.showCursorsProxyNum}}</strong></div>
+
+        <!-- <div @click="ShowDxsistance" class="developer-tools show-distance">Show Distance</div> -->
+
+        <div id="data">
+          <h4>Element Interaction</h4>
+          <ul>
+            <li><span>Closest Elment:</span><span>{{this.$store.state.mauvinSettings.mauvin.closestElement}}</span></li>
+            <li><span># Mangetized:</span><span>{{this.$store.state.mauvinSettings.magnetElms.length}}</span></li>
+            <li><span>Index:</span><span>{{this.$store.state.mauvinSettings.elm.data.index}}</span></li>
+            <li><span>pythagoreanTheorem:</span><span>{{this.$store.state.mauvinSettings.elm.data.pythagoreantheorem}}</span></li>
+            <li><span>Inproxy:</span><span>{{this.$store.state.mauvinSettings.elm.data.inproxy}}</span></li>
+          </ul>
+        </div>
         <div id="data">
           <h4>Mauvin's Global Data</h4>
           <ul>
+            <li><span>Mauvin Activated Element:</span><span>{{this.$store.state.mauvinSettings.mauvin.activate}}</span></li>
+
             <li>
               <span>Position X:</span> <span class="data">{{this.$store.state.mauvinSettings.coords[0]}}</span>
             </li>
@@ -186,12 +214,13 @@
             <li>
               <span>Stroke Color:</span> <span class="data">{{this.$store.state.mauvinSettings.stroke.color}}</span>
             </li>
+
           </ul>
         </div>
       </div>
       <div class="setting rangeSlider">
         <h5>Cursor Size</h5>
-        <veeno v-model="mauvinsSize" :handles="2" :range="{ 'min': 1, 'max': 5 }"></veeno>
+        <veeno v-model="mauvinsSize" :handles="2" :range="{ 'min': 1, 'max': 4 }"></veeno>
         <div class="num">{{mauvinsSize}}</div>
       </div>
       <div class="setting">
@@ -235,6 +264,7 @@
         <div class="num">{{mauvinsStrokeSize}}</div>
       </div> -->
     </div>
+
     <div id="moving-action" :style="`transform: scale(${(mauvinsSize / 5) * 1.2});`">
       <div id="mauvin-stroke-real">
         <div id="stroke-adpot" v-if="this.$store.state.mauvinSettings.stroke.strokeCursor"></div>
@@ -490,7 +520,10 @@
     </div>
   </section>
   <section id="load-section" data-scroll-section>
-    <div class="download"><a href="" class="js-updateColor">Download Mauvin</a></div>
+    <div class="download"><a href="" class="js-updateColor">Download Mauvin</a>
+
+    </div>
+
   </section>
   <section id="code-section" data-scroll-section>
 
@@ -509,7 +542,6 @@
             <ul>
               <li>
                 <h3>Mauvin Built in Features Include</h3>
-                <!-- <h5>Features Include</h5> -->
                 <ul>
                   <li>Custom Cursor Behavior</li>
                   <li>Custom Cursor Styling</li>
@@ -673,8 +705,10 @@ export default {
     strokeCursor() {},
   },
   watch: {
+
     strokeCursor() {},
     mauvinsSize(val) {
+      this.$store.commit('mauvinSettings/cursorSize', (val / 4) * 25);
       this.$store.commit('mauvinSettings/character', val);
     },
     mauvinsStrokeSize(val) {
@@ -683,13 +717,11 @@ export default {
   },
   destroyed: function() {},
   mounted: function() {
-
     var sound = new Howl({
       loop: true,
       volume: 0.1,
       src: ['../sound/space.mp3']
     });
-
     sound.once('load', function() {
       sound.play();
     });
@@ -697,6 +729,21 @@ export default {
   },
   created: function() {},
   methods: {
+
+    showTrigger() {
+      alert(this.$store.state.mauvinSettings.showCursorsProxyNum)
+      this.$store.commit('mauvinSettings/showTrigger', !this.$store.state.mauvinSettings.showCursorsProxyNum);
+      if (this.$store.state.mauvinSettings.showCursorsProxyNum) {
+        document.querySelectorAll('.pythagoreantheorem').forEach((elm) => {
+          elm.classList.remove('show')
+        })
+      } else {
+        document.querySelectorAll('.pythagoreantheorem').forEach((elm) => {
+          elm.classList.add('show')
+        })
+      }
+
+    },
     toggleStroke() {
       document.querySelector('.js-toggle-stroke').classList.toggle('is-on');
       this.$store.commit('mauvinSettings/strokeCursor', this.$store.state.mauvinSettings.stroke.strokeCursor);
