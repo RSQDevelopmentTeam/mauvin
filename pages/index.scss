@@ -6,6 +6,45 @@ $yellow: #ffdd00;
 $white: white;
 
 @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Work+Sans:ital,wght@0,100;0,200;0,300;0,700;1,300&display=swap');
+
+#story-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  z-index: 222;
+  background-color: #000;
+  transform: scale(1);
+  border-radius:0%;
+  transition: all 1s cubic-bezier(0.86, 0, 0.07, 1);
+
+
+  &.hide {
+    pointer-events: none;
+    transform: scale(0);
+    border-radius:100%;
+
+
+  }
+  #store-content {
+    #story-telling {
+      font-size:23px;
+      padding:
+      5px 15px;
+      color: #000;
+      border-radius: 30px;
+      background-color: #ffdd00;
+      text-align: center;
+    }
+  }
+}
+
+
 #home-page {
   min-height: 100vh;
 
@@ -66,6 +105,17 @@ $white: white;
     color: $white;
     line-height: 1.1;
   }
+
+#story-intro {
+  // will-change: transform;
+  // transform: translateY(100vh);
+
+  &.show {
+    transform: translateY(0vh);
+  }
+}
+
+
 
   #intro-section {
     position: relative;
@@ -494,6 +544,20 @@ $white: white;
     #grid-container{
       position: relative;
       pointer-events: none;
+    }
+
+    #story-movement {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      top: 0;
+      display: flex;
+      align-content: center;
+      justify-content: center;
+      align-items: center;
+      margin:  auto;
+      height: 100vh;
+      width: calc(100vw - 300px);
     }
 
     #moving-action {

@@ -173,11 +173,11 @@ export default {
       let holdProxyNums = [];
       this.$store.state.mauvinSettings.magnetElms.forEach((item) => {
         holdProxyNums.push({
-          Cost: parseInt(item.dataset.pythagoreantheorem), /// Must parse number floating causes issues
-          elm: item
+          distance: parseInt(item.dataset.pythagoreantheorem), /// Must parse number floating causes issues
+          elm: item.dataset.index
         });
       });
-      let c = holdProxyNums.reduce((prev, curr) => prev.Cost < curr.Cost ? prev : curr);
+      let c = holdProxyNums.reduce((prev, curr) => prev.distance < curr.distance ? prev : curr);
       this.$store.commit('mauvinSettings/closestElement', c);
     },
     magnetize() {
@@ -365,6 +365,8 @@ export default {
     },
   },
   mounted: function() {
+
+    document.querySelector('body').style.cursor = "none";
     if (!this.touchevents) {
       // Stroke Mouse Listener
       document.querySelector('body').addEventListener('mousemove', (e) => this.onMouseMove(e));
@@ -373,7 +375,6 @@ export default {
       // Grab Elements
       this.$store.commit('mauvinSettings/addingElements', [...document.querySelectorAll('[data-mauvin-hover]')]);
       // Grab Magnet
-      this.$store.commit('mauvinSettings/addingMagnetElements', [...document.querySelectorAll('[data-mauvin-magnet]')]);
       this.$store.commit('mauvinSettings/addingMagnetElements', [...document.querySelectorAll('[data-mauvin-magnet]')]);
 
 
@@ -399,6 +400,8 @@ export default {
       // Start Cursor
       this.startMauvin();
     }
+
+
   },
   beforeDestroy: function() {
     document.querySelector('body').removeEventListener('mousemove', (e) => this.onMouseMove(e));
@@ -413,9 +416,9 @@ export default {
 };
 </script>
 <style lang="scss">
-body {
-    cursor: none;
-}
+// body {
+//     cursor: none;
+// }
 
 #mauvin-container {
     position: fixed;

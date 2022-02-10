@@ -1,6 +1,7 @@
 <template>
 <nav v-if="ready" id="nav">
   <div id="logo"></div>
+  <div id="sound-toggle" class="on"></div>
 </nav>
 </template>
 
@@ -38,6 +39,30 @@ a {
   color: #fff;
 }
 
+#sound-toggle {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: black;
+  display: flex;
+  position: absolute;
+  left: 60px;
+  top: 25px;
+  background-size: 15px;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+
+  &.on {
+    background-image: url('/img/on.svg');
+  }
+
+  &.off {
+    background-image: url('/img/off.svg');
+  }
+
+}
+
 #nav {
   position: absolute;
   display: flex;
@@ -50,7 +75,6 @@ a {
   align-items: center;
   margin: 0 32px;
   z-index: 3;
-  pointer-events: none;
 
   &.nav-enter-active {
     opacity: 0;
