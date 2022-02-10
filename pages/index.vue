@@ -604,7 +604,7 @@
 
               <h3>How to use developer tools</h3>
               <p>Applying <span class="keyword">[data-dev="true"]</span> to an element allows Mauvin methods to provide helpful dev information.</p>
-              <p>Example of this is this Digram below:</p>
+              <p>Example of this is this Diagrambelow:</p>
               <div class="magnetic" data-mauvin-hover data-emitdistance="50" data-mauvin-magnet data-dev="true">
                 <div class="meg mangetic-ball"></div>
               </div>
