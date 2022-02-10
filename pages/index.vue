@@ -1,14 +1,13 @@
 <template>
 <div id="home-page" data-scroll-container :class="introClasses">
   <section id="intro-section" data-scroll-section>
-    <div class="magnetic-info one" data-mauvin-hover></div>
+    <div class="magnetic-info one" data-mauvin-hove></div>
     <div class="magnetic-info two" data-mauvin-hover data-emitdistance="30"></div>
     <div class="magnetic-info three" data-mauvin-hover data-emitdistance="30" data-mauvin-magnet>
       <div class="eye-ball">
         <div class="meg"></div>
       </div>
     </div>
-
     <div class="magnetic-info four" data-mauvin-hover data-emitdistance="30" data-mauvin-magnet>
       <div class="eye-ball">
         <div class="meg"></div>
@@ -152,15 +151,9 @@
         <!-- <p>A Vue Cursor With Prebuilt Features</p> -->
       </div>
       <div class="setting data-container">
-        <div class="developer-tools show-trigger">Show Trigger Line Is <strong>{{this.$store.state.mauvinSettings.effectAllElementsInArea}}</strong></div>
-        <div class="developer-tools show-trigger">Show Distance <strong>{{this.$store.state.mauvinSettings.showCursorsProxyNum}}</strong></div>
-
-        <!-- <div @click="ShowDxsistance" class="developer-tools show-distance">Show Distance</div> -->
-
         <div id="data">
           <h4>Element Interaction</h4>
           <ul>
-            <li><span>Closest Elment:</span><span>{{this.$store.state.mauvinSettings.mauvin.closestElement}}</span></li>
             <li><span># Mangetized:</span><span>{{this.$store.state.mauvinSettings.magnetElms.length}}</span></li>
             <li><span>Index:</span><span>{{this.$store.state.mauvinSettings.elm.data.index}}</span></li>
             <li><span>pythagoreanTheorem:</span><span>{{this.$store.state.mauvinSettings.elm.data.pythagoreantheorem}}</span></li>
@@ -218,6 +211,7 @@
           </ul>
         </div>
       </div>
+
       <div class="setting rangeSlider">
         <h5>Cursor Size</h5>
         <veeno v-model="mauvinsSize" :handles="2" :range="{ 'min': 1, 'max': 4 }"></veeno>
@@ -243,7 +237,7 @@
           </div>
           <div class="toggle-section">
             <div class="mauvin-toggle-stroke js-updateStrokeColor">
-              <div class="dot "></div>
+              <div class="dot"></div>
             </div>
           </div>
         </div>
@@ -257,12 +251,6 @@
           <div :style="{backgroundColor: '#60ACF0'}" data-color="#60ACF0" class="color-dot" @click="updateStrokeColor"> </div>
         </div>
       </div>
-      <!-- <div class="setting rangeSlider">
-        <h5>Cursor Sroke Size</h5>
-        <veeno v-model="mauvinsStrokeSize" :handles="20" :range="{ 'min': 0, 'max': 35 }">
-        </veeno>
-        <div class="num">{{mauvinsStrokeSize}}</div>
-      </div> -->
     </div>
 
     <div id="moving-action" :style="`transform: scale(${(mauvinsSize / 5) * 1.2});`">
@@ -519,124 +507,149 @@
       </div>
     </div>
   </section>
-  <section id="load-section" data-scroll-section>
+  <!-- <section id="load-section" data-scroll-section>
     <div class="download"><a href="" class="js-updateColor">Download Mauvin</a>
 
     </div>
 
-  </section>
+  </section> -->
   <section id="code-section" data-scroll-section>
 
-    <div class="grid grid-cols-12 gap-8 mx-8 lg:mx-64 mb-64">
-      <div class="col-span-10 2xl:col-span-7">
-        <div id="mauvins-content">
-          <h2>Mauvin is a custom cursor for Vue project that provide prebuilt features giving you access to a modest array of tools to help get your work done faster well still staying unique.</h2>
+    <div class="grid grid-cols-10 gap-8 mx-8 lg:mx-64 mb-64">
+      <div class="col-span-6 col-start-3 ">
+        <div class="mauvins-content text-center">
+          <h2>Mauvin is designed to help anyone get results, regardless of their coding experience. The easy-to-follow directions allows users to tailor Mauvin cursor to their website's needs. With array of styling options.</h2>
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-12 gap-8 mx-8 lg:mx-64 mb-64">
-      <div class="col-span-10 2xl:col-span-10">
-        <div id="mauvins-content">
-          <div class="code-feature-container">
-            <ul>
-              <li>
-                <h3>Mauvin Built in Features Include</h3>
-                <ul>
-                  <li>Custom Cursor Behavior</li>
-                  <li>Custom Cursor Styling</li>
-                  <li>Data Cursor Handling</li>
-                  <li>Magnetic Cursor Interaction</li>
-                  <li>Developer Cursor &amp; Elements Tools for testing</li>
-                </ul>
-              </li>
-            </ul>
+    <div class="grid grid-cols-12 gap-8 mx-8 lg:mx-64 mt-64 mb-64">
+      <div class="col-span-10 2xl:col-span-4">
+        <div class="mauvins-content text-center">
+          <div class="code-container">
+            <span class="block"><span class="keyword"></span> {</span>
+            <span class="block"><span class="keyword">coords:</span> <span class="plain">[-30, -30]</span>,</span>
+            <span class="block"><span class="keyword">elm:</span> {</span>
+            <span class="block indent-two"><span class="keyword">data:</span> <span class="plain">0</span>,</span>
+            <span class="block">}</span>
+            <span class="block"><span class="keyword">elms:</span> <span class="plain">[]</span>,</span>
+            <span class="block"><span class="keyword">elmsData:</span> <span class="plain">[]</span>,</span>
+            <span class="block"><span class="keyword">devElements:</span> <span class="plain">[]</span>,</span>
+            <span class="block"><span class="keyword">effectAllElementsInArea:</span> <span class="boolean">false</span>,</span>
+            <span class="block"><span class="keyword">showCursorsProxyNum:</span> <span class="boolean">false</span>,</span>
+            <span class="comments">// Mauvin's</span>
+            <span class="keyword">mauvin:</span>
+            <span class="inline-block">{</span>
+            <span class="block indent-two"><span class="keyword">closestElement:</span> <span class="plain">{}</span>,</span>
+            <span class="comments indent-two">// Settings &amp;Styling</span>
+            <span class="block indent-two"><span class="keyword">speed:</span> <span class="plain">0.2</span>,</span>
+            <span class="block indent-two"><span class="keyword">settlingDown:</span> <span class="plain">250</span>,</span>
+            <span class="block indent-two"><span class="keyword">color:</span> <span class="string">'#FFE433'</span>,</span>
+            <span class="block indent-two"><span class="keyword">size:</span> <span class="plain">10</span>,</span>
+            <span class="block indent-two"><span class="keyword">borderRaidus:</span> <span class="string">'50%'</span>,</span>
+            <span class="comments indent-two">// Behavior Data</span>
+            <span class="block indent-two"><span class="keyword">movingActionTime:</span> <span class="plain">{}</span>,</span>
+            <span class="block indent-two"><span class="keyword">moving:</span> <span class="boolean">false</span>,</span>
+            <span class="block indent-two"><span class="keyword">activate:</span> <span class="boolean">false</span>,</span>
+            <span class="block indent-two"><span class="keyword">direction:</span> {</span>
+            <span class="block indent-three"><span class="keyword">x:</span> <span class="plain">0</span>,</span>
+            <span class="block indent-three"><span class="keyword">y:</span> <span class="plain">0</span>,</span>
+            <span class="indent-two block">}</span>
+            <span class="block">}</span>
+            <span class="comments ">// Mauvin's Stroke</span>
+            <span class="keyword">stroke:</span>
+            <span class="inline-block">{</span>
+            <span class="block indent-two"><span class="keyword">strokeCursor:</span> <span class="boolean">false</span>,</span>
+            <span class="block indent-two"><span class="keyword">speed:</span> <span class="plain">0.4</span>,</span>
+            <span class="block indent-two"><span class="keyword">size:</span> <span class="plain">20</span>,</span>
+            <span class="block indent-two"><span class="keyword">color:</span> <span class="string">'#FFE433'</span>,</span>
+            <span class="block indent-two"><span class="keyword">borderStyle:</span> <span class="string">'solid'</span>,</span>
+            <span class="block indent-two"><span class="keyword">borderWidth:</span> <span class="plain">1</span>,</span>
+            <span class="block indent-two"><span class="keyword">borderRaidus:</span> <span class="string">'50%'</span>,</span>
+            <span class="block">}</span>
+            <span class="block"><span class="keyword"></span> {</span>
+
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="grid grid-cols-12 gap-8 mx-8 lg:mx-64 mb-64">
-      <div class="col-span-10 2xl:col-span-5">
-        <div id="mauvins-content" class="text-center">
-          <div class="magnetic" data-mauvin-hover></div>
-        </div>
-      </div>
-      <div class="col-span-10 2xl:col-span-7">
-        <div id="mauvins-content">
+      <div class="2xl:col-start-6 col-span-10 2xl:col-span-8">
+        <div class="mauvins-content">
           <div class="code-feature-container">
+
+            <h3>How to use Mauvin's attributes</h3>
             <ul>
               <li>
-                <h3>Mauvin Built in Features</h3>
-                <h5>Options Include</h5>
-                <ul>
-                  <li>Moving Dectection</li>
-                  <li>Moving Direction Dectection</li>
-                  <li>Moving Settling Down Time</li>
-                  <li>Moving Coords Detail</li>
-                  <li>speed</li>
-                </ul>
+                Applying<span class="keyword"> [data-mauvin-hover] </span>to an element allows Mauvin to attach functionally to element providing callbacks and data.
+              </li>
+              <li>
+                Applying <span class="keyword">[data-emitdistance=<span class="plan">#</span>]</span> to an element will create a trigger proxy you can attach an callback to as well as if you turn on dev tools you can see a virual repenstaion of
+                where the trigger proxy is.
               </li>
             </ul>
-            <div class="code-container"> </div>
+            <div class="code-container small">
+              <span class="keyword">&lt;div </span>
+              <span class="plain">class</span>=<span class="string">"elm"</span> <span class="boolean">data-mauvin-hover data-emitdistance</span>=<span class="string">"30"</span>
+              <span class="boolean">data-mauvin-magnet></span><span class="keyword">&lt;/div&gt;</span>
+            </div>
           </div>
+
+          <div class="code-feature-container">
+
+            <h3>How to use developer tools</h3>
+            <p>Applying <span class="keyword">[data-dev="true"]</span> to an element allows Mauvin methods to provide helpful dev information.</p>
+            <div class="magnetic" data-mauvin-hover data-emitdistance="50" data-mauvin-magnet data-dev="true">
+              <div class="meg mangetic-ball"></div>
+            </div>
+            <div class="code-container small">
+              <span class="boolean">data-dev=<span class="string">"boolean"</span></span>
+            </div>
+          </div>
+
+          <div class="code-feature-container">
+            <h3>Mauvin automatically
+              injected attributes</h3>
+            <div class="code-container small">
+              <span class="boolean">data-index=<span class="string">"#"</span></span> <span class="boolean">data-inProxy=<span class="string">"boolean"</span></span>
+            </div>
+            <p>Mauvin adds two attributes. The index of the element and if it has a call back check if your in proxy based on emitdistance attributes</p>
+          </div>
+
+          <div class="code-feature-container">
+            <h3>Mauvin's Event Listeners</h3>
+            <div class="code-container small">
+              <span class="plain block"><span class="keyword">elm</span>.addEventListener(<span class="string">'mouseenter'</span>, (<span class="keyword">e</span>)=> <span class="boolean"> this.onMouseEnter(<span
+                    class="keyword">e</span>));</span></span>
+              <span class="plain block"><span class="keyword">elm</span>.addEventListener(<span class="string">'mouseleave'</span>, (<span class="keyword">e</span>)=> <span class="boolean">this.onMouseLeave(<span
+                    class="keyword">e</span>));</span></span>
+            </div>
+            <p>Mauvin attaches event listeners to elements that have <span class="keyword">[data-mauvin-hover]</span> This is where you can hook into triggers for what mauvin enters or leaves an element.
+              which one is closets</p>
+          </div>
+
+
+
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-12 gap-8 mx-8 lg:mx-64 mb-64">
+    <div class="grid grid-cols-12 gap-8 mx-8 lg:mx-64 mt-64 mb-64">
       <div class="col-span-10 2xl:col-span-5">
-        <div id="mauvins-content" class="text-center">
-          <div class="magnetic" data-mauvin-hover></div>
+        <div class="mauvins-content text-center">
+
         </div>
       </div>
       <div class="col-span-10 2xl:col-span-7">
-        <div id="mauvins-content">
-          <p>Mauvin Style can be customized via Vuex MauvinSettings Store</p>
+        <div class="mauvins-content">
 
           <div class="code-feature-container">
+            <h3>Developer Tools</h3>
+            <p>Mauvin has two developer tools to help you work with data on the fly.</p>
             <ul>
-              <li>
-                <h3>Styling</h3>
-                <h5>Options Include</h5>
-                <ul>
-                  <li>Background-color</li>
-                  <li>Size</li>
-                  <li>Border-Radius</li>
-                </ul>
-              </li>
+              <li>Pythagorean theorem distance of the center of the element</li>
+              <li>Visual proxy trigger line</li>
             </ul>
             <div class="code-container"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-12 gap-8 mx-8 lg:mx-64 mb-64">
-      <div class="col-span-10 2xl:col-span-5">
-        <div id="mauvins-content" class="text-center">
-          <div class="magnetic" data-mauvin-hover></div>
-        </div>
-      </div>
-      <div class="col-span-10 2xl:col-span-7">
-        <div id="mauvins-content">
-          <p>Mauvin Style can be customized via Vuex MauvinSettings Store</p>
-
-          <div class="code-feature-container">
-            <ul>
-              <li>
-                <h3>Stroke Border Styling</h3>
-                <h5>Options Include</h5>
-                <ul>
-                  <li>Size</li>
-                  <li>Border-width</li>
-                  <li>Border-Style</li>
-                  <li>Border-Color</li>
-                  <li>Border-Radius</li>
-                </ul>
-              </li>
-            </ul>
-            <div class="code-container">[Data]</div>
           </div>
         </div>
       </div>
@@ -688,17 +701,7 @@ export default {
       value: 5,
       mauvinsSize: 5,
       mauvinsStrokeSize: 10,
-      items: [{
-          img: '/img/cat.jpg',
-          size: 65,
-          distance: 100,
-        },
-        {
-          img: '/img/image.jpg',
-          size: 65,
-          distance: 100,
-        }
-      ]
+      items: []
     };
   },
   computed: {
@@ -720,7 +723,7 @@ export default {
     var sound = new Howl({
       loop: true,
       volume: 0.1,
-      src: ['../sound/space.mp3']
+      src: ['../sound/mauvin.mp3']
     });
     sound.once('load', function() {
       sound.play();

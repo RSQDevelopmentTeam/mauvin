@@ -5,8 +5,8 @@ export const state = () => ({
   },
   elms: [],
   elmsData: [],
-  dotCursor: true,
   effectAllElementsInArea: true,
+  devElements: [],
   showCursorsProxyNum: true,
   mauvin: {
     activate: false,
@@ -17,8 +17,6 @@ export const state = () => ({
     settlingDown: 250,
     color: '#FFE433',
     size: 10,
-    defualtSize: 30,
-    content: null,
     borderRaidus: '50%',
     oldX: 0,
     oldY: 0,
@@ -26,7 +24,6 @@ export const state = () => ({
       y: '',
       x: ''
     },
-
   },
   stroke: {
     strokeCursor: false,

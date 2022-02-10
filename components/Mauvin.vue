@@ -2,7 +2,7 @@
 <div id="mauvin-container" :class="classes">
   <div v-if="this.$store.state.mauvinSettings.stroke.strokeCursor" id="mauvin-stroke" ref="mauvinStroke"></div>
   <div id="mauvin" ref="mauvinCursor">
-    <div v-if="this.$store.state.mauvinSettings.dotCursor" id="mauvin-color" ref="mauvinColor"></div>
+    <div id="mauvin-color" ref="mauvinColor"></div>
   </div>
 </div>
 </template>
@@ -97,8 +97,8 @@ export default {
         'data-index': i,
         'data-inProxy': (elm.dataset.emitdistance !== undefined) ? parseInt(this.pythagoreanTheorem(elm)) <= parseInt(elm.dataset.emitdistance) : 'proxyoff'
       });
-      // Developer Tool
-      if (this.$store.state.mauvinSettings.showCursorsProxyNum) {
+      //Developer Tool
+      if (this.$store.state.mauvinSettings.showCursorsProxyNum && elm.querySelector('.pythagoreantheorem')) {
         elm.querySelector('.pythagoreantheorem').innerHTML = Math.round(elm.dataset.pythagoreantheorem);
       }
     },
@@ -152,16 +152,21 @@ export default {
     },
 
     magnetTween(elm) {
-      TweenMax.to(elm.querySelector('.meg'), this.$store.state.mauvinSettings.magnet.speed, {
-        x: -((Math.sin(this.angle(elm)) * this.pythagoreanTheorem(elm)) / 2),
-        y: -((Math.cos(this.angle(elm)) * this.pythagoreanTheorem(elm)) / 2),
-      });
+      if (elm.querySelectorAll('.meg').length > 0) {
+        TweenMax.to(elm.querySelector('.meg'), this.$store.state.mauvinSettings.magnet.speed, {
+          x: -((Math.sin(this.angle(elm)) * this.pythagoreanTheorem(elm)) / 2),
+          y: -((Math.cos(this.angle(elm)) * this.pythagoreanTheorem(elm)) / 2),
+        });
+      }
+
     },
     magnetTweenReset(elm) {
-      TweenMax.to(elm.querySelector('.meg'), this.$store.state.mauvinSettings.magnet.speed, {
-        x: 0,
-        y: 0,
-      });
+      if (elm.querySelectorAll('.meg').length > 0) {
+        TweenMax.to(elm.querySelector('.meg'), this.$store.state.mauvinSettings.magnet.speed, {
+          x: 0,
+          y: 0,
+        });
+      }
     },
 
     closestToCursor(elms) {
@@ -250,10 +255,14 @@ export default {
       }
       this.$data.RunMauvin();
     },
+
     // Developer Tool
     showMauvinsProxy() {
       if (this.$store.state.mauvinSettings.showCursorsProxyNum) {
-        this.$store.state.mauvinSettings.elms.forEach((elm, i) => {
+        const filterOutNoneDev = this.$store.state.mauvinSettings.elms.filter(obj => {
+          return obj.dataset.dev
+        });
+        filterOutNoneDev.forEach((elm, i) => {
           let cursorProxyData = document.createElement("div");
           cursorProxyData.className = 'pythagoreantheorem show';
           cursorProxyData.innerHTML = Math.round(elm.dataset.pythagoreantheorem);
@@ -261,10 +270,12 @@ export default {
         })
       }
     },
-
     createProxyTrigger(elmArr) {
-      if (this.$store.state.mauvinSettings.magnetElms.length > 0) {
-        elmArr.forEach((elm) => {
+      if (elmArr.length > 0) {
+        const filterOutNoneDev = elmArr.filter(obj => {
+          return obj.dataset.dev
+        });
+        filterOutNoneDev.forEach((elm) => {
           if (elm.dataset.emitdistance !== undefined) {
             let magnetSize = document.createElement("div");
             magnetSize.className = 'proxy-trigger';
@@ -363,6 +374,9 @@ export default {
       this.$store.commit('mauvinSettings/addingElements', [...document.querySelectorAll('[data-mauvin-hover]')]);
       // Grab Magnet
       this.$store.commit('mauvinSettings/addingMagnetElements', [...document.querySelectorAll('[data-mauvin-magnet]')]);
+      this.$store.commit('mauvinSettings/addingMagnetElements', [...document.querySelectorAll('[data-mauvin-magnet]')]);
+
+
       // let's Grab elements that are needed
       if (this.$store.state.mauvinSettings.elms.length > 0) {
         // Add Mouse Listeners to grab elements
@@ -447,25 +461,51 @@ body {
     flex-wrap: nowrap;
     align-content: center;
     z-index: 33;
-    font-size: 1px;
+
 }
 
 // Attributes in proxy
 [data-inproxy='true'] {}
 
+@keyframes float {
+    0% {
+        box-shadow: 0 5px 15px 0 rgba(0,0,0,0.6);
+        transform: translatey(0px);
+    }
+    50% {
+        box-shadow: 0 25px 15px 0 rgba(0,0,0,0.2);
+        transform: translatey(-6px);
+    }
+    100% {
+        box-shadow: 0 5px 15px 0 rgba(0,0,0,0.6);
+        transform: translatey(0px);
+    }
+}
 // Developer Tool
 .pythagoreantheorem {
     position: absolute;
     top: 0;
     left: 0;
     padding: 5px 10px;
-    background-color: white;
+    background-color: beige;
     color: black;
     pointer-events: none;
     font-size: 16px;
     display: none;
     &.show {
         display: block;
+    }
+    &:before {
+        content: 'Distance';
+        position: absolute;
+        top: -30px;
+        left: -89px;
+        padding: 4px 10px;
+        background-color: beige;
+        border-radius: 15px 15px 0 15px;
+        animation: float 9s ease-in-out infinite;
+        will-change: transform;
+
     }
 }
 
@@ -477,11 +517,34 @@ body {
     right: 0;
     left: 0;
     margin: auto;
-    border-radius: 50%;
-    border: 1px dashed red;
     z-index: 1;
     pointer-events: none;
-    animation: proxy-trigger 20s infinite;
+
+    &:before {
+        content: 'Trigger Proxy';
+        position: absolute;
+        top: 0;
+        right: -112px;
+        padding: 4px 10px;
+        background-color: beige;
+        border-radius: 15px 15px 15px 0;
+        animation: float 9s ease-in-out infinite;
+        will-change: transform;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        // background-color: white;
+        animation: proxy-trigger 20s infinite;
+        border-radius: 50%;
+        border: 1px dashed beige;
+
+    }
 }
 
 @keyframes proxy-trigger {

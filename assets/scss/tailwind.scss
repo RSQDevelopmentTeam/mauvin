@@ -40,14 +40,14 @@
     @apply text-26-mobile lg:text-36;
   }
   h4 {
-    @apply text-24-mobile lg:text-34;
+    @apply text-18-mobile lg:text-24;
   }
   h5 {
-    @apply text-22-mobile lg:text-32;
+    @apply text-22-mobile lg:text-24;
   }
 
   p {
-    @apply text-16-mobile lg:text-16-tablet 2xl:text-16;
+    @apply text-16-mobile lg:text-16-tablet 2xl:text-24;
   }
 
 }
