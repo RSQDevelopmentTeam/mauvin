@@ -687,10 +687,10 @@ import locoControls from '~/mixins/locoControls.js';
 
 // you probably need to import built-in style
 import veeno from 'veeno'
-import {
-  TweenMax,
-  gsap
-} from 'gsap';
+// import {
+//   TweenMax,
+//   gsap
+// } from 'gsap';
 import 'nouislider/distribute/nouislider.min.css';
 import {
   Howl,
