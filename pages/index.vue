@@ -8,7 +8,7 @@
     </div>
 
     <section id="intro-section" data-scroll-section>
-      <div class="magnetic-info two" data-mauvin-hover data-emitdistance="30"></div>
+      <!-- <div class="magnetic-info two" data-mauvin-hover data-emitdistance="30"></div>
       <div class="magnetic-info three" data-mauvin-hover data-emitdistance="30" data-mauvin-magnet>
         <div class="eye-ball">
           <div class="meg"></div>
@@ -18,7 +18,7 @@
         <div class="eye-ball">
           <div class="meg"></div>
         </div>
-      </div>
+      </div> -->
 
       <div id="grid-container">
         <div id="grid"></div>
@@ -157,7 +157,7 @@
           <!-- <p>A Vue Cursor With Prebuilt Features</p> -->
         </div>
         <div class="setting data-container">
-          <div id="data">
+          <!-- <div id="data">
             <h4>Element Interaction</h4>
             <ul>
               <li><span># Mangetized:</span><span>{{this.$store.state.mauvinSettings.magnetElms.length}}</span></li>
@@ -165,7 +165,7 @@
               <li><span>pythagoreanTheorem:</span><span>{{this.$store.state.mauvinSettings.elm.data.pythagoreantheorem}}</span></li>
               <li><span>Inproxy:</span><span>{{this.$store.state.mauvinSettings.elm.data.inproxy}}</span></li>
             </ul>
-          </div>
+          </div> -->
           <div id="data">
             <h4>Mauvin's Global Data</h4>
             <ul>
@@ -534,16 +534,18 @@
       <div class="grid grid-cols-12 gap-8 mx-8 lg:mx-64 mt-64 mb-64">
         <div class="col-span-10 2xl:col-span-4">
           <div class="mauvins-content text-center">
+            <h4>Mauvin's mauvinsetting.js</h4>
             <div class="code-container">
               <span class="block"><span class="keyword"></span> {</span>
               <span class="block"><span class="keyword">coords:</span> <span class="plain">[{{this.$store.state.mauvinSettings.coords[0]}},{{this.$store.state.mauvinSettings.coords[1]}}]</span>,</span>
+              <span class="comments indent-two">// Muavins Enter Element dataset data</span>
               <span class="block"><span class="keyword">elm:</span> {</span>
               <span class="block indent-two"><span class="keyword">data:</span> <span class="plain">{}</span>,</span>
               <span class="block">}</span>
               <span class="block"><span class="keyword">elms:</span> <span class="plain">[ elm, elm ]</span>,</span>
-              <span class="block"><span class="keyword">elmsData:</span> <span class="plain">[ elmdata, elmdata ]</span>,</span>
-              <span class="block"><span class="keyword">devElements:</span> <span class="plain">[ elmdatadevs ]</span>,</span>
-              <span class="block"><span class="keyword">effectAllElementsInArea:</span> <span class="boolean">{{this.$store.state.mauvinSettings.EffectAllElementsInArea}}</span>,</span>
+              <span class="block"><span class="keyword">elmsData:</span> <span class="plain">[ elm.dataset, elm.dataset]</span>,</span>
+              <span class="block"><span class="keyword">devElements:</span> <span class="plain">[]</span>,</span>
+              <span class="block"><span class="keyword">effectAllElementsInArea:</span> <span class="boolean">{{this.$store.state.mauvinSettings.effectAllElementsInArea}}</span>,</span>
               <span class="block"><span class="keyword">showCursorsProxyNum:</span> <span class="boolean">{{this.$store.state.mauvinSettings.showCursorsProxyNum}}</span>,</span>
               <span class="comments">// Mauvin's</span>
               <span class="keyword">mauvin:</span>
@@ -556,7 +558,6 @@
               <span class="block indent-two"><span class="keyword">size:</span> <span class="plain">10</span>,</span>
               <span class="block indent-two"><span class="keyword">borderRaidus:</span> <span class="string">'50%'</span>,</span>
               <span class="comments indent-two">// Behavior Data</span>
-              <span class="block indent-two"><span class="keyword">movingActionTime:</span> <span class="plain">{}</span>,</span>
               <span class="block indent-two"><span class="keyword">moving:</span> <span class="boolean">{{this.$store.state.mauvinSettings.mauvin.moving}}</span>,</span>
               <span class="block indent-two"><span class="keyword">activate:</span> <span class="boolean">{{this.$store.state.mauvinSettings.mauvin.activate}}</span>,</span>
               <span class="block indent-two"><span class="keyword">direction:</span> {</span>
@@ -575,22 +576,27 @@
               <span class="block indent-two"><span class="keyword">borderWidth:</span> <span class="plain">1</span>,</span>
               <span class="block indent-two"><span class="keyword">borderRaidus:</span> <span class="string">'50%'</span>,</span>
               <span class="block">}</span>
-
             </div>
           </div>
         </div>
 
         <div class="2xl:col-start-6 col-span-10 2xl:col-span-8">
           <div class="mauvins-content">
+
+            <div class="code-feature-container">
+              <h3>Simple Muavin</h3>
+              <p>Mauvin at heart is just a cursor. If your looking to have a simply cursor. Just set your values to <span class="keyword">mauvinSettings.js</span>.</p>
+
+            </div>
+
             <div class="code-feature-container">
               <h3>How to use Mauvin's attributes</h3>
               <ul>
                 <li>
-                  Applying<span class="keyword"> [data-mauvin-hover] </span>to an element allows Mauvin to attach functionally to element providing callbacks and data.
+                  Applying<span class="keyword"> [data-mauvin-hover] </span>to an element allows Mauvin to attach functionality to element providing callbacks and data.
                 </li>
                 <li>
-                  Applying <span class="keyword">[data-emitdistance=<span class="plan">#</span>]</span> to an element will create a trigger proxy you can attach an callback to as well as if you turn on dev tools you can see a visual repenstaion of
-                  where the trigger proxy is.
+                  Applying <span class="keyword">[data-emitdistance=<span class="plan">#</span>]</span> to an element will create a trigger proxy you can attach an callback too.
                 </li>
               </ul>
               <div class="code-container small">
@@ -601,10 +607,10 @@
             </div>
 
             <div class="code-feature-container">
-
               <h3>How to use developer tools</h3>
               <p>Applying <span class="keyword">[data-dev="true"]</span> to an element allows Mauvin methods to provide helpful dev information.</p>
-              <p>Example of this is this Diagrambelow:</p>
+              <br />
+              <p>Example of this are in the Diagrams below:</p>
               <div class="magnetic" data-mauvin-hover data-emitdistance="50" data-mauvin-magnet data-dev="true">
                 <div class="meg mangetic-ball"></div>
               </div>
@@ -618,11 +624,12 @@
 
             <div class="code-feature-container">
               <h3>Mauvin automatically
-                injected attributes</h3>
+                injects three attributes</h3>
               <div class="code-container small">
-                <span class="boolean">data-index=<span class="string">"#"</span></span> <span class="boolean">data-inProxy=<span class="string">"boolean"</span></span>
+                <span class="boolean">data-index=<span class="string">"#"</span></span> <span class="boolean">data-mauvin-inProxy=<span class="string">"boolean"</span> <span class="boolean">closest-to-mauvin=</span><span
+                    class="string">"boolean"</span></span>
               </div>
-              <p>Mauvin adds two attributes. The index of the element and if it has a call back check if your in proxy based on emitdistance attributes</p>
+              <p>Mauvin adds three attributes. The index of the element, check if it's in proxy givin &amp; if it's the closest to Muavin out of all the other elements tagged.</p>
             </div>
 
             <div class="code-feature-container">
@@ -633,11 +640,32 @@
                 <span class="plain block"><span class="keyword">elm</span>.addEventListener(<span class="string">'mouseleave'</span>, (<span class="keyword">e</span>)=> <span class="boolean">this.onMouseLeave(<span
                       class="keyword">e</span>));</span></span>
               </div>
+              <p>Mauvin attaches event listeners to elements that have <span class="keyword">[data-mauvin-hover]</span> This is where you can hook into triggers for what Mauvin does during entering or leaveing an element.
+              </p>
+            </div>
+
+            <div class="code-feature-container">
+              <h3>Mauvin's Methods</h3>
+              <div class="code-container small">
+                <span class="plain"><span class="comments">// This Function disperse data to all elements with [data-mauvin-hover] </span> disperseMouseData() </span>
+                <span class="plain"> <span class="comments">// This Function detects cursor movment an can be a create place add new functionality </span> onMouseMove()</span>
+                <span class="plain"> <span class="comments">// This Function detects when the cursor enters the element with an attabiute [data-mauvin-hover] </span>onMouseEnter() </span>
+                <span class="plain"> <span class="comments">// This Function detects when the cursor leave the element with an attabiute [data-mauvin-hover] </span> onMouseLeave() </span>
+              </div>
               <p>Mauvin attaches event listeners to elements that have <span class="keyword">[data-mauvin-hover]</span> This is where you can hook into triggers for what mauvin enters or leaves an element.
               </p>
             </div>
 
 
+            <div class="code-feature-container">
+              <h3>Magnetic Elements</h3>
+              <div class="code-container small">
+                <span class="plain"><span class="comments">// This Function disperse data to all elements with [data-mauvin-hover] </span> magnetize() </span>
+                <span class="plain"> <span class="comments">// This Function detects cursor movment an can be a create place add new functionality </span> magnetTween(elm)</span>
+                <span class="plain"> <span class="comments">// This Function detects when the cursor enters the element with an attabiute [data-mauvin-hover] </span> magnetTweenReset(elm) </span>
+                <span class="plain"> <span class="comments">// This Function detects when the cursor leave the element with an attabiute [data-mauvin-hover] </span> getMagnetProxy(elm, width, height) </span>
+              </div>
+            </div>
 
           </div>
         </div>
@@ -686,7 +714,7 @@ export default {
 
     return {
       from,
-      seo_title: 'Custom page title',
+      seo_title: 'Welcome To Mauvin',
       seo_description: 'Custom page description',
       seo_og_image: 'custom/page/og/image.png'
     };
@@ -694,13 +722,14 @@ export default {
   // data specific to the page and not from the API / CMS
   data() {
     return {
+      loco: {},
       value: 5,
       mauvinsSize: 5,
       mauvinsStrokeSize: 10,
       items: [],
       windowHeight: 1,
       backgroundSound: {},
-      mauvinStory: {},
+      mauvinStory: 0.5,
       backgroundSoundVolume: 0.5
     };
   },
@@ -713,6 +742,7 @@ export default {
   watch: {
     updateScrollPos: function() {
       this.$data.backgroundSound.volume(0.1 - (this.$store.state.global.scrollPos / this.$data.windowHeight) * 0.1);
+      this.$data.mauvinStory.volume(0.5 - (this.$store.state.global.scrollPos / this.$data.windowHeight) * 0.5);
       return this.$store.state.global.scrollPos
     },
     strokeCursor() {},
@@ -737,7 +767,7 @@ export default {
     });
 
     this.$data.mauvinStory = new Howl({
-      volume: 1,
+      volume: 0.5,
       src: ['../sound/story.mp3'],
     });
 
@@ -746,46 +776,88 @@ export default {
     document.querySelector('#story-telling').addEventListener('click', () => {
       this.$data.mauvinStory.play();
       this.$data.backgroundSound.play();
-
       document.querySelector('#story-intro').classList.add('show')
       document.querySelector('#story-line').classList.add('hide')
 
-      let storyElm = document.querySelector('#story-movement');
-
-      tl
-        .to(storyElm, {
-          duration: .7,
-          y: -50,
-          delay: 2.2,
-        })
-        .to(storyElm, {
-          duration: .7,
-          y: 0,
-        }, "+=0")
-        .to(storyElm, {
-          duration: .7,
-          x: -50,
-        }, "-=0.1")
-        .to(storyElm, {
-          duration: .7,
-          x: 0,
-        }, "-=0.1")
-        .to(storyElm, {
-          y: 0,
-          duration: .7,
-          scale: 1.5
-        }, "-=0.1")
-        .to(storyElm, {
-          duration: .7,
-          scale: 0.5
-        }, "-=0.1")
-        .to(storyElm, {
-          duration: 0.7,
-          scale: 1,
-
-        }, "-=0.1")
+      // let storyElm = document.querySelector('#story-movement');
+      // tl.to('#mauvin-left #mauvin-eye, #mauvin-right #mauvin-eye', {
+      //     y: -50,
+      //     duration: 0.6,
+      //     delay: 1.8,
+      //   }, "+=0")
+      //   .to('#mauvin-left #mauvin-eye, #mauvin-right #mauvin-eye', {
+      //     y: 50,
+      //     duration: 0.6,
+      //   }, "+=0")
+      //   .to('#mauvin-left #mauvin-eye, #mauvin-right #mauvin-eye', {
+      //     x: -50,
+      //     y: 0,
+      //     duration: 0.6,
+      //   }, "+=0")
+      //   .to('#mauvin-left #mauvin-eye, #mauvin-right #mauvin-eye', {
+      //     y: 0,
+      //     x: 50,
+      //     duration: 0.5,
+      //   }, "+=0")
+      //   .to('#mauvin-left #mauvin-eye, #mauvin-right #mauvin-eye', {
+      //     y: 0,
+      //     x: 0,
+      //     duration: 0.5,
+      //   }, "+=0")
+      //   .to(storyElm, {
+      //     y: 0,
+      //     x: 0,
+      //     scale: 1.4,
+      //     duration: 0.5,
+      //   }, "+=0")
+      //   .to(storyElm, {
+      //     y: 0,
+      //     x: 0,
+      //     scale: 0.7,
+      //     duration: 1,
+      //   }, "+=0")
+      //   .to(storyElm, {
+      //     y: 0,
+      //     x: 0,
+      //     scale: 1,
+      //     duration: 1.1,
+      //   }, "+=0")
+      // tl
+      //   .to(storyElm, {
+      //     duration: .7,
+      //     y: -50,
+      //     delay: 2.2,
+      //   })
+      //
+      //   .to(storyElm, {
+      //     duration: .7,
+      //     y: 0,
+      //   }, "+=0")
+      //   .to(storyElm, {
+      //     duration: .7,
+      //     x: -50,
+      //   }, "-=0.1")
+      //   .to(storyElm, {
+      //     duration: .7,
+      //     x: 0,
+      //   }, "-=0.1")
+      //   .to(storyElm, {
+      //     y: 0,
+      //     duration: .7,
+      //     scale: 1.5
+      //   }, "-=0.1")
+      //   .to(storyElm, {
+      //     duration: .7,
+      //     scale: 0.5
+      //   }, "-=0.1")
+      //   .to(storyElm, {
+      //     duration: 0.7,
+      //     scale: 1,
+      //
+      //   }, "-=0.1")
     })
 
+    // console.log()
     setTimeout(() => {
       document.querySelector('#sound-toggle').addEventListener('click', () => {
         if (soundFlag) {
@@ -800,8 +872,6 @@ export default {
         }
       })
     }, 222)
-
-
 
     this.animateIn(this.finishedAnimating);
   },
@@ -819,7 +889,6 @@ export default {
           elm.classList.add('show')
         })
       }
-
     },
     toggleStroke() {
       document.querySelector('.js-toggle-stroke').classList.toggle('is-on');
@@ -855,6 +924,9 @@ export default {
     },
     finishedAnimating: function() {
       this.locomotiveScrollInit();
+      this.$data.loco = this.scroll;
+      // console.log(this.scroll)
+      // this.scroll.stop()
     },
   }
 };

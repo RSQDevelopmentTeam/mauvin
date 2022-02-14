@@ -5,14 +5,14 @@ export const state = () => ({
   },
   elms: [],
   elmsData: [],
-  effectAllElementsInArea: true,
   devElements: [],
+  effectAllElementsInArea: true,
   showCursorsProxyNum: true,
   mauvin: {
     activate: false,
     closestElement: {},
     moving: false,
-    movingActionTime: {},
+    clearMovingActionTime: {},
     speed: 0.2,
     settlingDown: 250,
     color: '#FFE433',
@@ -58,7 +58,7 @@ export const mutations = {
     state.coords = val;
   },
   addMovment(state, val) {
-    state.mauvin.movingActionTime = val;
+    state.mauvin.clearMovingActionTime = val;
   },
   cursorMoving (state, val) {
     state.mauvin.moving = val;

@@ -93,13 +93,13 @@ export default {
     disperseMouseData(i, arr, elm) {
       // Apply Data to element
       this.setAttributes(elm, {
-        'data-pythagoreanTheorem': this.pythagoreanTheorem(elm),
-        'data-index': i,
-        'data-inProxy': (elm.dataset.emitdistance !== undefined) ? parseInt(this.pythagoreanTheorem(elm)) <= parseInt(elm.dataset.emitdistance) : 'proxyoff'
+        'data-mauvin-pythagoreanTheorem': this.pythagoreanTheorem(elm),
+        'data-mauvin-index': i,
+        'data-mauvin-inProxy': (elm.dataset.emitdistance !== undefined) ? parseInt(this.pythagoreanTheorem(elm)) <= parseInt(elm.dataset.emitdistance) : 'proxyoff'
       });
       //Developer Tool
       if (this.$store.state.mauvinSettings.showCursorsProxyNum && elm.querySelector('.pythagoreantheorem')) {
-        elm.querySelector('.pythagoreantheorem').innerHTML = Math.round(elm.dataset.pythagoreantheorem);
+        elm.querySelector('.pythagoreantheorem').innerHTML = Math.round(elm.dataset.mauvinPythagoreantheorem);
       }
     },
 
@@ -169,22 +169,31 @@ export default {
       }
     },
 
-    closestToCursor(elms) {
+    closestToMauvin(elms) {
       let holdProxyNums = [];
       this.$store.state.mauvinSettings.magnetElms.forEach((item) => {
+        this.setAttributes(item, {
+          'closest-to-mauvin': false,
+        });
         holdProxyNums.push({
-          distance: parseInt(item.dataset.pythagoreantheorem), /// Must parse number floating causes issues
-          elm: item.dataset.index
+          distance: parseInt(item.dataset.mauvinPythagoreantheorem), /// Must parse number floating causes issues
+          index: item.dataset.index,
+          elm: item
         });
       });
+
       let c = holdProxyNums.reduce((prev, curr) => prev.distance < curr.distance ? prev : curr);
+      this.setAttributes(c.elm, {
+        'closest-to-mauvin': true,
+      });
       this.$store.commit('mauvinSettings/closestElement', c);
     },
     magnetize() {
       this.$store.state.mauvinSettings.magnetElms.forEach((elm) => {
         if (this.$store.state.mauvinSettings.effectAllElementsInArea && this.$store.state.mauvinSettings.magnetElms.length >= 2) {
-          this.closestToCursor()
-          if (elm.dataset.inproxy === "true") {
+          this.closestToMauvin()
+          // console.log(elm.dataset)
+          if (elm.dataset.mauvinInproxy === "true") {
             this.magnetTween(elm);
           } else {
             this.magnetTweenReset(elm);
@@ -203,7 +212,7 @@ export default {
     },
     mauvinMovement() {
       this.$store.commit('mauvinSettings/cursorMoving', true);
-      clearTimeout(this.$store.state.mauvinSettings.mauvin.movingActionTime);
+      clearTimeout(this.$store.state.mauvinSettings.mauvin.clearMovingActionTime);
       this.$store.commit('mauvinSettings/addMovment', setTimeout(() => {
         this.$store.commit('mauvinSettings/cursorMoving', false);
         this.$store.commit('mauvinSettings/cursorDirectionX', 'center');
@@ -224,10 +233,6 @@ export default {
         this.$store.commit('mauvinSettings/cursorDirectionX', 'right');
       }
       this.$store.commit('mauvinSettings/oldCoordsX', this.coordinates[0]);
-
-      // this.$store.commit('mauvinSettings/cursorDirectionX', this.$store.state.mauvinSettings.mauvin.direction.x);
-      // this.$store.commit('mauvinSettings/cursorDirectionY', this.$store.state.mauvinSettings.mauvin.direction.y);
-
     },
 
     // Mauvin Moving
@@ -245,6 +250,7 @@ export default {
     startMauvin() {
       this.$data.RunMauvin = () => {
         this.mauvinCharacter();
+
         this.mauvinTween();
         this.mauvinDirection();
 
@@ -265,7 +271,7 @@ export default {
         filterOutNoneDev.forEach((elm, i) => {
           let cursorProxyData = document.createElement("div");
           cursorProxyData.className = 'pythagoreantheorem show';
-          cursorProxyData.innerHTML = Math.round(elm.dataset.pythagoreantheorem);
+          cursorProxyData.innerHTML = Math.round(elm.dataset.mauvinPythagoreantheorem);
           elm.appendChild(cursorProxyData);
         })
       }
@@ -308,7 +314,6 @@ export default {
           TweenMax.to('#mauvin-left #mauvin-eye, #mauvin-right #mauvin-eye', 1, {
             x: 20,
           });
-
         }
         if (this.$store.state.mauvinSettings.mauvin.direction.x === 'left') {
           TweenMax.to('#mauvin-person', 2, {
@@ -365,7 +370,6 @@ export default {
     },
   },
   mounted: function() {
-
     document.querySelector('body').style.cursor = "none";
     if (!this.touchevents) {
       // Stroke Mouse Listener
@@ -376,7 +380,6 @@ export default {
       this.$store.commit('mauvinSettings/addingElements', [...document.querySelectorAll('[data-mauvin-hover]')]);
       // Grab Magnet
       this.$store.commit('mauvinSettings/addingMagnetElements', [...document.querySelectorAll('[data-mauvin-magnet]')]);
-
 
       // let's Grab elements that are needed
       if (this.$store.state.mauvinSettings.elms.length > 0) {
@@ -400,8 +403,6 @@ export default {
       // Start Cursor
       this.startMauvin();
     }
-
-
   },
   beforeDestroy: function() {
     document.querySelector('body').removeEventListener('mousemove', (e) => this.onMouseMove(e));
@@ -416,10 +417,6 @@ export default {
 };
 </script>
 <style lang="scss">
-// body {
-//     cursor: none;
-// }
-
 #mauvin-container {
     position: fixed;
     top: 0;
@@ -464,12 +461,27 @@ export default {
     flex-wrap: nowrap;
     align-content: center;
     z-index: 33;
-
 }
 
 // Attributes in proxy
-[data-inproxy='true'] {}
-
+[data-mauvin-inProxy='true'] {
+    background-color: red;
+}
+[closest-to-mauvin='true'] {
+    position: relative;
+    &:after {
+        content: 'Closest';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        color: black;
+        font-size: 15px;
+        padding: 4px 10px;
+        background-color: beige;
+        border-radius: 0 0 0 0;
+        will-change: transform;
+    }
+}
 @keyframes float {
     0% {
         box-shadow: 0 5px 15px 0 rgba(0,0,0,0.6);
@@ -508,7 +520,6 @@ export default {
         border-radius: 15px 15px 0 15px;
         animation: float 9s ease-in-out infinite;
         will-change: transform;
-
     }
 }
 
@@ -542,11 +553,9 @@ export default {
         right: 0;
         width: 100%;
         height: 100%;
-        // background-color: white;
         animation: proxy-trigger 20s infinite;
         border-radius: 50%;
         border: 1px dashed beige;
-
     }
 }
 

@@ -7,6 +7,13 @@ $white: white;
 
 @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Work+Sans:ital,wght@0,100;0,200;0,300;0,700;1,300&display=swap');
 
+body {
+
+  &.overhidden {
+    overflow: hidden;
+  }
+}
+
 #story-line {
   position: absolute;
   top: 0;
@@ -23,12 +30,10 @@ $white: white;
   border-radius:0%;
   transition: all 1s cubic-bezier(0.86, 0, 0.07, 1);
 
-
   &.hide {
     pointer-events: none;
     transform: scale(0);
     border-radius:100%;
-
 
   }
   #store-content {
@@ -43,6 +48,7 @@ $white: white;
     }
   }
 }
+
 
 
 #home-page {
@@ -91,12 +97,15 @@ $white: white;
   }
 
   h3 {
+    font-family: 'Work Sans', sans-serif;
     font-size: 48px;
-    font-weight: bold;
+    // font-weight: bold;
     color: $white;
   }
 
   h4 {
+
+    font-weight: bold;
     color: $white;
     margin-top: 15px;
   }
@@ -558,6 +567,7 @@ $white: white;
       margin:  auto;
       height: 100vh;
       width: calc(100vw - 300px);
+      pointer-events: none;
     }
 
     #moving-action {
@@ -744,7 +754,7 @@ $white: white;
     justify-content: center;
     align-items: center;
     background-color: #c6c6b3;
-    background: radial-gradient(circle, rgba(43,43,43,1) 0%, rgba(0,0,0,1) 100%);
+    // background: radial-gradient(circle, rgba(43,43,43,1) 0%, rgba(0,0,0,1) 100%);
     padding: 32px 0 22px 0;
 
     a {
@@ -772,7 +782,7 @@ $white: white;
     flex-direction: column;
     width: 100vw;
     padding-top: 100px;
-    background: linear-gradient(177deg, #0d0d0d 0%, #323232 100%);
+    // background: linear-gradient(177deg, #0d0d0d 0%, #323232 100%);
 
     .magnetic {
       position: relative;
@@ -866,7 +876,7 @@ $white: white;
 }
 
 .code-container {
-  background-color: $black;
+  background-color: #0e0e0e;
   border-radius: 20px;
   padding: 20px 20px;
   color: #fff;

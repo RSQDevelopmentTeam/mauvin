@@ -46,7 +46,7 @@ a {
   background-color: black;
   display: flex;
   position: absolute;
-  left: 60px;
+  left: 40px;
   top: 25px;
   background-size: 15px;
   background-position: center;

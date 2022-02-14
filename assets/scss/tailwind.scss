@@ -13,19 +13,11 @@
   }
 
   @font-face {
-    font-family: Circular-Book;
-    src:url('/fonts/circular/lineto-circular-book.eot');
-    src:url('/fonts/circular/lineto-circular-book.eot?#iefix') format('embedded-opentype'),
-    url('/fonts/circular/lineto-circular-book.woff2') format('woff2'),
-    url('/fonts/circular/lineto-circular-book.woff') format('woff');
+    font-family:'Work Sans';
   }
 
   @font-face {
-    font-family: Circular-Bold;
-    src:url('/fonts/circular/lineto-circular-bold.eot');
-    src:url('/fonts/circular/lineto-circular-bold.eot?#iefix') format('embedded-opentype'),
-    url('/fonts/circular/lineto-circular-bold.woff2') format('woff2'),
-    url('/fonts/circular/lineto-circular-bold.woff') format('woff');
+    font-family:'Work Sans';
     font-weight: normal;
     font-style: normal;
   }
@@ -40,10 +32,10 @@
     @apply text-26-mobile lg:text-36;
   }
   h4 {
-    @apply text-18-mobile lg:text-24;
+    @apply text-18-mobile lg:text-32;
   }
   h5 {
-    @apply text-22-mobile lg:text-24;
+    @apply text-22-mobile lg:text-36;
   }
 
   p {

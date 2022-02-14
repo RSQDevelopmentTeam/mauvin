@@ -60,6 +60,7 @@ module.exports = {
     },
     fontFamily: {
       sans: [
+        'Work Sans',
         'Circular-Book',
         'ui-sans-serif',
         'system-ui',
