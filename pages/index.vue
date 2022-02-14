@@ -771,7 +771,7 @@ export default {
       src: ['../sound/story.mp3'],
     });
 
-    let tl = gsap.timeline();
+    // let tl = gsap.timeline();
 
     document.querySelector('#story-telling').addEventListener('click', () => {
       this.$data.mauvinStory.play();
