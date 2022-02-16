@@ -484,7 +484,8 @@ export default {
 
     #mauvin-progress {
         position: absolute;
-        left: var(--width);
+        // left: var(--width);
+        left: -5px;
         right: 0;
         bottom: 0;
         top: 0;
