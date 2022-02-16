@@ -771,6 +771,8 @@ export default {
       src: ['../sound/story.mp3'],
     });
 
+
+
     // let tl = gsap.timeline();
 
     document.querySelector('#story-telling').addEventListener('click', () => {
@@ -778,6 +780,10 @@ export default {
       this.$data.backgroundSound.play();
       document.querySelector('#story-intro').classList.add('show')
       document.querySelector('#story-line').classList.add('hide')
+
+      setTimeout(() => {
+        this.$data.backgroundSound.fade(0.1, 0.0, 0.5);
+      }, 60000);
 
       // let storyElm = document.querySelector('#story-movement');
       // tl.to('#mauvin-left #mauvin-eye, #mauvin-right #mauvin-eye', {

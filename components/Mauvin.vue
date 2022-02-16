@@ -1,7 +1,10 @@
 <template>
 <div id="mauvin-container" :class="classes">
-  <div v-if="this.$store.state.mauvinSettings.stroke.strokeCursor" id="mauvin-stroke" ref="mauvinStroke"></div>
+  <div v-if="this.$store.state.mauvinSettings.stroke.active" id="mauvin-stroke" ref="mauvinStroke"></div>
   <div id="mauvin" ref="mauvinCursor">
+    <svg v-if="this.$store.state.mauvinSettings.progress.active" id="mauvin-progress" :height="size" :width="size">
+      <circle :r="halfSize" cx="50%" cy="50%" :stroke="this.$store.state.mauvinSettings.progress.color" fill="transparent" stroke-dasharray="100px" :stroke-dashoffset="scroll"></circle>
+    </svg>
     <div id="mauvin-color" ref="mauvinColor"></div>
   </div>
 </div>
@@ -19,7 +22,9 @@ export default {
   data() {
     return {
       RunMauvin: null,
-      raf: null
+      raf: null,
+      wH: 0,
+      bodyH: 0
     };
   },
   computed: {
@@ -48,20 +53,37 @@ export default {
     elm() {
       return this.$store.state.mauvinSettings.elm
     },
-    cursorImage() {
-      return this.$store.state.mauvinSettings.cursorImage;
-    },
     strokeCursor() {
       return this.$store.state.mauvinSettings.stroke.strokeCursor;
     },
+    scroll() {
+      let progress = (this.$store.state.global.scrollPos / (this.$data.bodyHeight - this.$data.wH)) * 100;
+      return progress;
+
+    },
+    halfSize() {
+      return `${(Math.round(this.$store.state.mauvinSettings.mauvin.size) + 9)/2}px`
+    },
+    size() {
+      let width = Math.round(this.$store.state.mauvinSettings.mauvin.size);
+      console.log(width, width)
+      return `${Math.round(this.$store.state.mauvinSettings.mauvin.size) + 10}px`
+    },
   },
   watch: {
+
     strokeCursor(oldVal, newVal) {
       this.settingMauvinsStrokeStyle();
       return this.$store.state.mauvinSettings.stroke.strokeCursor;
     },
     elm() {},
     activate() {},
+    size() {
+      return this.$store.state.mauvinSettings.mauvin.size;
+    },
+    scroll() {
+      return this.$store.state.global.scrollPos;
+    },
     coordinates() {
       this.$store.state.mauvinSettings.elmsData.forEach((elm, i, arr) => {
         /// Updates List of Elements object of data
@@ -123,6 +145,7 @@ export default {
       // Setting Style Options On Mauvin
       mauvin.style.setProperty('--color', this.$store.state.mauvinSettings.mauvin.color);
       mauvin.style.setProperty('--mauvinRadius', this.$store.state.mauvinSettings.mauvin.borderRaidus);
+      mauvin.style.setProperty('--width', this.$store.state.mauvinSettings.mauvin.size);
 
       this.settingMauvinsStrokeStyle();
     },
@@ -138,6 +161,11 @@ export default {
     onMouseLeave(e) {
       this.$store.commit('mauvinSettings/elmData', '');
       this.$store.commit('mauvinSettings/deactivate', false);
+    },
+
+    progressScale(e) {
+      this.$data.bodyHeight = document.querySelector('body').offsetHeight
+      this.$data.wH = window.innerHeight;
     },
 
     getMagnetProxy(elm, width, height) {
@@ -188,6 +216,7 @@ export default {
       });
       this.$store.commit('mauvinSettings/closestElement', c);
     },
+
     magnetize() {
       this.$store.state.mauvinSettings.magnetElms.forEach((elm) => {
         if (this.$store.state.mauvinSettings.effectAllElementsInArea && this.$store.state.mauvinSettings.magnetElms.length >= 2) {
@@ -371,9 +400,14 @@ export default {
   },
   mounted: function() {
     document.querySelector('body').style.cursor = "none";
+
     if (!this.touchevents) {
       // Stroke Mouse Listener
       document.querySelector('body').addEventListener('mousemove', (e) => this.onMouseMove(e));
+      window.addEventListener('resize', (e) => this.progressScale(e));
+
+      this.$data.bodyHeight = document.querySelector('body').offsetHeight
+      this.$data.wH = window.innerHeight;
       // Setting Muavins Styles
       this.settingMauvinStyle();
       // Grab Elements
@@ -394,6 +428,7 @@ export default {
             data: elm.dataset,
           });
         });
+
 
         // Developer helper tool
         this.showMauvinsProxy();
@@ -445,6 +480,18 @@ export default {
         will-change: transform;
         border: var(--stroke) var(--style) var(--color);
         border-radius: var(--mauvinStrokeRadius);
+    }
+
+    #mauvin-progress {
+        position: absolute;
+        left: var(--width);
+        right: 0;
+        bottom: 0;
+        top: 0;
+        margin: auto;
+        display: flex;
+        text-align: center;
+
     }
 }
 

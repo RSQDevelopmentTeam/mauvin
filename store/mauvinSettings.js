@@ -34,6 +34,10 @@ export const state = () => ({
     borderWidth: 1,
     borderRaidus: '50%',
   },
+  progress: {
+    active: true,
+    color: '#FFE433',
+  },
   magnetElms: [],
   magnet: {
     speed: 0.2,
