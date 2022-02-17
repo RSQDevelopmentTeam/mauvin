@@ -26,7 +26,7 @@ export const state = () => ({
     },
   },
   stroke: {
-    strokeCursor: false,
+    activate: false,
     speed: 0.4,
     size: 20,
     color: '#FFE433',
@@ -36,7 +36,9 @@ export const state = () => ({
   },
   progress: {
     active: true,
-    color: '#FFE433',
+    color: '#fff',
+    dasharray: "70px",
+    progressEndNum: 70,
   },
   magnetElms: [],
   magnet: {
@@ -98,7 +100,7 @@ export const mutations = {
     state.mauvin.direction.y = val;
   },
   strokeCursor (state, val) {
-    state.stroke.strokeCursor = !state.stroke.strokeCursor;
+    state.stroke.activate = !state.stroke.activate;
   },
   strokeCursorColor (state, val) {
     state.stroke.color = val;

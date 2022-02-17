@@ -1,9 +1,9 @@
 <template>
 <div id="mauvin-container" :class="classes">
-  <div v-if="this.$store.state.mauvinSettings.stroke.active" id="mauvin-stroke" ref="mauvinStroke"></div>
+  <div v-if="this.$store.state.mauvinSettings.stroke.activate" id="mauvin-stroke" ref="mauvinStroke"></div>
   <div id="mauvin" ref="mauvinCursor">
     <svg v-if="this.$store.state.mauvinSettings.progress.active" id="mauvin-progress" :height="size" :width="size">
-      <circle :r="halfSize" cx="50%" cy="50%" :stroke="this.$store.state.mauvinSettings.progress.color" fill="transparent" stroke-dasharray="100px" :stroke-dashoffset="scroll"></circle>
+      <circle :r="halfSize" cx="50%" cy="50%" fill="transparent" :stroke="color" :stroke-dasharray="this.$store.state.mauvinSettings.progress.dasharray" :stroke-dashoffset="scroll"></circle>
     </svg>
     <div id="mauvin-color" ref="mauvinColor"></div>
   </div>
@@ -38,43 +38,44 @@ export default {
     getStrokeWidth() {
       return parseInt(this.$store.state.mauvinSettings.stroke.borderWidth)
     },
-    coordinates() {
-      this.$store.commit('mauvinSettings/updateCoords', [this.$store.state.mauvinSettings.coords[0], this.$store.state.mauvinSettings.coords[1]]);
-      return [this.$store.state.mauvinSettings.coords[0], this.$store.state.mauvinSettings.coords[1]];
-    },
-    activate() {
-      return this.$store.state.mauvinSettings.active;
-    },
     classes() {
       return {
         'cursor-hover': this.activate,
       };
     },
-    elm() {
-      return this.$store.state.mauvinSettings.elm
-    },
-    strokeCursor() {
-      return this.$store.state.mauvinSettings.stroke.strokeCursor;
-    },
-    scroll() {
-      let progress = (this.$store.state.global.scrollPos / (this.$data.bodyHeight - this.$data.wH)) * 100;
-      return progress;
-
-    },
     halfSize() {
       return `${(Math.round(this.$store.state.mauvinSettings.mauvin.size) + 9)/2}px`
     },
+    color() {
+      return this.$store.state.mauvinSettings.progress.color;
+    },
+    strokeCursor() {
+      return this.$store.state.mauvinSettings.stroke.activate;
+    },
+    elm() {
+      return this.$store.state.mauvinSettings.elm
+    },
+    activate() {
+      return this.$store.state.mauvinSettings.active;
+    },
     size() {
-      let width = Math.round(this.$store.state.mauvinSettings.mauvin.size);
-      console.log(width, width)
       return `${Math.round(this.$store.state.mauvinSettings.mauvin.size) + 10}px`
+    },
+    scroll() {
+      return (this.$store.state.global.scrollPos / (this.$data.bodyHeight - this.$data.wH)) * this.$store.state.mauvinSettings.progress.progressEndNum;
+    },
+    coordinates() {
+      this.$store.commit('mauvinSettings/updateCoords', [this.$store.state.mauvinSettings.coords[0], this.$store.state.mauvinSettings.coords[1]]);
+      return [this.$store.state.mauvinSettings.coords[0], this.$store.state.mauvinSettings.coords[1]];
     },
   },
   watch: {
-
-    strokeCursor(oldVal, newVal) {
+    color() {
+      return this.$store.state.mauvinSettings.progress.color;
+    },
+    strokeCursor() {
       this.settingMauvinsStrokeStyle();
-      return this.$store.state.mauvinSettings.stroke.strokeCursor;
+      return this.$store.state.mauvinSettings.stroke.activate;
     },
     elm() {},
     activate() {},
@@ -127,7 +128,7 @@ export default {
 
     settingMauvinsStrokeStyle() {
       // Setting Style Options On Mauvin's Stroke Border
-      if (this.$store.state.mauvinSettings.stroke.strokeCursor) {
+      if (this.$store.state.mauvinSettings.stroke.activate) {
         setTimeout(() => {
           const mauvinStroke = document.querySelector('#mauvin-stroke');
           mauvinStroke.style.setProperty('--style', this.$store.state.mauvinSettings.stroke.borderStyle);
@@ -136,12 +137,10 @@ export default {
           mauvinStroke.style.setProperty('--mauvinStrokeRadius', this.$store.state.mauvinSettings.stroke.borderRaidus);
           document.querySelector('#mauvin-stroke-real').style.setProperty('--color', this.$store.state.mauvinSettings.stroke.color);
         }, 1)
-
       }
     },
     settingMauvinStyle() {
       const mauvin = this.$refs.mauvinCursor
-      const mauvinImage = this.$refs.mauvinImage;
       // Setting Style Options On Mauvin
       mauvin.style.setProperty('--color', this.$store.state.mauvinSettings.mauvin.color);
       mauvin.style.setProperty('--mauvinRadius', this.$store.state.mauvinSettings.mauvin.borderRaidus);
@@ -266,7 +265,7 @@ export default {
 
     // Mauvin Moving
     createStrokeMauvin() {
-      if (this.$store.state.mauvinSettings.stroke.strokeCursor) {
+      if (this.$store.state.mauvinSettings.stroke.activate) {
         let size = this.$store.state.mauvinSettings.stroke.size + (this.$store.state.mauvinSettings.mauvin.size);
         TweenMax.to(this.$refs.mauvinStroke, this.$store.state.mauvinSettings.stroke.speed, {
           y: (this.coordinates[1] - (size / 2)),
@@ -484,7 +483,6 @@ export default {
 
     #mauvin-progress {
         position: absolute;
-        // left: var(--width);
         left: -5px;
         right: 0;
         bottom: 0;
@@ -496,20 +494,20 @@ export default {
     }
 }
 
-.meg {
-    position: absolute;
-    margin: auto;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: nowrap;
-    align-content: center;
-    z-index: 33;
-}
+// .meg {
+//     position: absolute;
+//     margin: auto;
+//     left: 0;
+//     right: 0;
+//     top: 0;
+//     bottom: 0;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     flex-wrap: nowrap;
+//     align-content: center;
+//     z-index: 33;
+// }
 
 // Attributes in proxy
 [data-mauvin-inProxy='true'] {

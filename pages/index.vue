@@ -205,7 +205,7 @@
             <h4>Stroke</h4>
             <ul>
               <li>
-                <span>Turn Stroke on: </span> <span class="data">{{this.$store.state.mauvinSettings.stroke.strokeCursor}}</span>
+                <span>Turn Stroke on: </span> <span class="data">{{this.$store.state.mauvinSettings.stroke.activate}}</span>
               </li>
               <li>
                 <span>Stroke Size:</span> <span class="data">{{mauvinsStrokeSize}}</span>
@@ -248,7 +248,7 @@
             </div>
           </div>
         </div>
-        <div class="setting" v-if="this.$store.state.mauvinSettings.stroke.strokeCursor">
+        <div class="setting" v-if="this.$store.state.mauvinSettings.stroke.activate">
           <h5>Stroke Border Color</h5>
           <div class="color-dot-container stroke">
             <div :style="{backgroundColor: '#FFE433'}" data-color="#FFE433" class="color-dot" @click="updateStrokeColor"></div>
@@ -262,7 +262,7 @@
       <div id="story-movement">
         <div id="moving-action" :style="`transform: scale(${(mauvinsSize / 5) * 1.2});`">
           <div id="mauvin-stroke-real">
-            <div id="stroke-adpot" v-if="this.$store.state.mauvinSettings.stroke.strokeCursor"></div>
+            <div id="stroke-adpot" v-if="this.$store.state.mauvinSettings.stroke.activate"></div>
             <div id="mauvin-person" ref="mauvin-person">
               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 599.1 652" style="enable-background:new 0 0 599.1 652;" xml:space="preserve">
                 <path :fill="this.$store.state.mauvinSettings.mauvin.color" d="M441.3,52.5c-0.4,0-1.2,0-1.5-0.4c10-6.9,20.7-12.7,32.6-17.3c10-3.5,20.3-6.1,31.1-7.7
@@ -568,13 +568,19 @@
               <span class="comments ">// Mauvin's Stroke</span>
               <span class="keyword">stroke:</span>
               <span class="inline-block">{</span>
-              <span class="block indent-two"><span class="keyword">strokeCursor:</span> <span class="boolean">false</span>,</span>
+              <span class="block indent-two"><span class="keyword">activate:</span> <span class="boolean">false</span>,</span>
               <span class="block indent-two"><span class="keyword">speed:</span> <span class="plain">0.4</span>,</span>
               <span class="block indent-two"><span class="keyword">size:</span> <span class="plain">20</span>,</span>
               <span class="block indent-two"><span class="keyword">color:</span> <span class="string">'#FFE433'</span>,</span>
               <span class="block indent-two"><span class="keyword">borderStyle:</span> <span class="string">'solid'</span>,</span>
               <span class="block indent-two"><span class="keyword">borderWidth:</span> <span class="plain">1</span>,</span>
               <span class="block indent-two"><span class="keyword">borderRaidus:</span> <span class="string">'50%'</span>,</span>
+              <span class="block">}</span>
+              <span class="comments ">// Mauvin's Progress</span>
+              <span class="keyword">progress:</span>
+              <span class="inline-block">{</span>
+              <span class="block indent-two"><span class="keyword">active:</span> <span class="plain">false</span>,</span></span>
+              <span class="block indent-two"><span class="keyword">color:</span> <span class="string">'#FFE433'</span>,</span></span>
               <span class="block">}</span>
             </div>
           </div>
@@ -898,7 +904,7 @@ export default {
     },
     toggleStroke() {
       document.querySelector('.js-toggle-stroke').classList.toggle('is-on');
-      this.$store.commit('mauvinSettings/strokeCursor', this.$store.state.mauvinSettings.stroke.strokeCursor);
+      this.$store.commit('mauvinSettings/strokeCursor', this.$store.state.mauvinSettings.stroke.activate);
     },
     updateCursorColor(e) {
       if (typeof e.target.dataset.color !== 'undefined' && !e.target.classList.contains('active')) {
